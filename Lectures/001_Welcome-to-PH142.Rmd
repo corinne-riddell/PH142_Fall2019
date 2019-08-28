@@ -1,0 +1,101 @@
+---
+title: "Report on life expectancy"
+author: "Corinne Riddell"
+date: "August 28, 2019"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r lib-load, echo = FALSE, message=FALSE}
+library(readr)
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+library(glue)
+```
+
+```{r choose-your-state, echo=FALSE}
+my_state <- "New York"
+```
+
+# Life expectancy for non-Hispanic Black and White men and women in `r my_state` between 1969-2013
+
+### Introduction 
+
+Life expectancy is one of the core measures used in public health to comment on 
+the well-being of groups of people. Differences in life expectancy by race/ethnicity,
+for individuals living in the same region can reflect underlying inequalities in
+policies, access to care, food environments, structural and systemic racism, among
+other potential causes.
+
+### Research objective (Problem)
+
+The purpose of this short report is to visualize life expectancy among Black and 
+White men and women in `r my_state` between 1969 and 2013. 
+
+### Plan
+
+Death certificates in the United States include race/ethnicity, age at death, 
+and date of death and capture all deaths of US residents. These data are aggregated by the 
+[CDC's National Cancer Institute](https://seer.cancer.gov/seerstat/) into the 
+SEER*Stat software. Previously, Riddell et al.^1^, analyzed these data to 
+compute estimated trends in life expectancy for non-Hispanic Black and White men 
+and women, for 40 US states between 1969 and 2013. States without enough data were
+excluded from these analyses.
+
+To carry out this short report, we will use data from Riddell et al. to 
+visualize trends in life expectancy as part of an exploratory data analysis. In 
+particular, we will plot time trends for Black and White men and women in 
+`r my_state`.
+
+### Data
+
+Here are the first five rows of these data for `r my_state`:
+```{r import-and-filter-data, echo=F, message=F}
+le_data <- read_csv("../Data/Life-expectancy-by-state-long.csv")
+
+my_state_data <- le_data %>% 
+  filter(state == my_state) %>%
+  mutate(gender = case_when(sex == "Female" ~ "Women",
+                            sex == "Male" ~ "Men")) %>%
+  select(-sex)
+
+head(my_state_data)
+```
+
+### Analysis
+
+```{r first-look-time-plots, echo=F, fig.width=12}
+ggplot(data = my_state_data, aes(x = year, y = LE)) + 
+  geom_line(aes(col = race)) + 
+  facet_wrap(~ gender) +
+  labs(y = "Life expectancy (years)",
+       title = glue("Trends in life expectancy for Black and White men and women in {my_state}")
+  ) +
+  theme_minimal(base_size = 15)
+```
+
+```{r reshape-and-compute-LE-difference, echo=F, fig.width=12}
+my_state_data_wide <- my_state_data %>% 
+  spread(key = race, value = LE) %>%
+  mutate(le_difference = white - black)
+
+ggplot(my_state_data_wide, aes(x = year, y = le_difference)) + 
+  geom_line() +
+  facet_wrap(~ gender) +
+  labs(y = "Difference in life expectancy (years)",
+       title = glue("Difference in life expectancy between black and white men and women in {my_state}")
+       ) +
+  theme_minimal(base_size = 15)
+```
+
+### Conclusion
+
+The difference in life expectancy in 1969 between non-Hispanic blacks and whites was `r my_state_data_wide %>% filter(year == 1969, gender == "Men") %>% select(le_difference) %>% round(1)` years for men and `r my_state_data_wide %>% filter(year == 1969, gender == "Women") %>% select(le_difference) %>% round(1)` for women in `r my_state`. 
+
+By 2013, the difference was `r my_state_data_wide %>% filter(year == 2013, gender == "Men") %>% select(le_difference) %>% round(1)` years for men and `r my_state_data_wide %>% filter(year == 2013, gender == "Women") %>% select(le_difference) %>% round(1)` for women in `r my_state`.
+
+### References
+
+1. Riddell CA, Morrison KT, Harper S, Kaufman JS. Trends in the contribution of major causes of death to the black-white life expectancy gap by US state. **Health & Place**. 2018. 52:85-100. doi: 10.1016/j.healthplace.2018.04.003.  
