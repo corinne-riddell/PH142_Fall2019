@@ -199,10 +199,10 @@ Overwrite this text with your answer to question 5.
 
 **Submission** (Tutorial: https://www.youtube.com/watch?v=NYNDi_zJRGE)
 
-- 1. Click on the **Terminal** tab in the panel below
+- 1. Before submitting, make sure the file knits properly, otherwise you won't receive credit for the assignment. **This includes looking at the PDF to ensure that no code runs off the page. See the instructions at the top of the page for more information.**
 
-- 2. Copy and paste the following line of code into **Terminal** panel and press "enter":
+- 2. Then, click on the **Terminal** tab in the panel below.
 
-```cd; cd PH142_Fall19/Assignments/Assignment01; python3 ok --submit;```
+- 3. Copy and paste the line of code (cd; cd PH142_Fall19/Assignments/Assignment01; python3 ok --submit;) into **Terminal** panel and press "enter". 
 
-- 3. Follow the prompts
+- 4. Follow the remaining prompts in the terminal to submit your assignment. You can watch this video tutorial online (https://www.youtube.com/watch?v=NYNDi_zJRGE) for a more detailed step-by-step. 
