@@ -8,7 +8,9 @@ output: pdf_document
 ### Announcements
 
 * It is okay if you do not see your Lab 1 or Assignment 1 as "submitted" on Gradescope. It will show up soon (we have to push them from the intermediary product to Gradescope).
-* Let the GSIs know if you are experiencing technical issues with the datahub. 
+* Let the GSIs know if you are experiencing technical issues with the datahub. Either tell them during lab/OHs or email the GSI account.
+* Please use the pinned threads on the bCourses discussion forum to ask questions. 
+* Lab attendance/completion policy
 
 ### Learning objectives for today
 
