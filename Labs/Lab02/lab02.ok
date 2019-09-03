@@ -1,0 +1,14 @@
+{
+  "name": "Lab02: Cesarean Delivery",
+  "endpoint": "cal/ph142/fa19/lab02",
+  "src": [
+    "Lab02_cesarean-delivery.Rmd"
+    ],
+  "tests": {
+      "tests/q*.py": "ok_test"
+  },
+  "protocols": [
+    "file_contents",
+    "backup"
+    ]
+}
