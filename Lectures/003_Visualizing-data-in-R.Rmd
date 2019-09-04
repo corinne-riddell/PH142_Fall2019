@@ -82,7 +82,8 @@ Since the dataset contains 39 states across two genders and two races, first use
 a function to subset the data to contain only White men in California.
 
 Which function from last lecture do we need?
-    * `mutate()`, `select()`, `filter()`, `rename()`, or `arrange()`?
+
+* `mutate()`, `select()`, `filter()`, `rename()`, or `arrange()`?
 
 ### `dplyr`'s `filter()` to select a subset of rows
 
@@ -359,7 +360,7 @@ ggplot(dat = data_2013, aes(x = LE)) +
     - `size`
     - `lty`
     
-    ### A common `dplyr` mistake to avoid!
+### A common `dplyr` mistake to avoid!
 
 With dplyr, the pipe operator goes at the end of the line, not the beginning:
 
