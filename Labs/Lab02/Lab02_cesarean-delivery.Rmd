@@ -276,6 +276,6 @@ you'd like to save the completed file onto your computer.**
 
 - 2. Then, click on the **Terminal** tab in the panel below.
 
-- 3. Copy and paste the line of code (cd; cd PH142_Fall2019/Assignments/Lab02; python3 ok --submit;) into **Terminal** panel below and press "enter". 
+- 3. Copy and paste the line of code (cd; cd PH142_Fall2019/Labs/Lab02; python3 ok --submit;) into **Terminal** panel below and press "enter". 
 
 - 4. Follow the remaining prompts in the terminal to submit your assignment. You can watch this video tutorial online (https://www.youtube.com/watch?v=NYNDi_zJRGE) for a more detailed step-by-step. 
