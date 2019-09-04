@@ -323,8 +323,7 @@ wm_data <- le_data %>% filter(year == 2013, sex == "Male", race == "white")
 ggplot(dat = wm_data, aes(x = LE)) + geom_histogram()
 ```
 
-### Use `fill` to change the *fill* of the histogram and `binwidth` to specify 
-how the bin width 
+### Use `fill` to change the *fill* of the histogram and `binwidth` to specify the bin's width 
 
 ```{r ggplot_geom_histogram-bin-width, out.width = "60%", fig.align='center'}
 wm_data <- le_data %>% filter(year == 2013, sex == "Male", race == "white")
