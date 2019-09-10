@@ -1,0 +1,70 @@
+---
+title: "Lab03: Simulation (optional)"
+author: "Your Name and Student ID"
+date: "Today's Date"
+output: pdf_document
+---
+
+# Part II: Simulation as tool for understanding statistics
+
+This section contains slightly advanced material for those interested in 
+learning about using R for statistical simulations. Therefore, part II is
+optinal and not required to be submitted for grading.
+
+One very useful feature of R is the ability to create simulations, both as
+research and educational tools. More specifically, one can define a set of 
+functions to generate "realistic" data, and then observe the behavior of 
+algorithms used to estimate statistics based on the simulated data. The benefit 
+of simulating data vs. using actual data, is that you now know the true values 
+the statistics should take because you defined them yourself. (The downside of 
+simulations, is they usually are an over-simplistic representation of the real 
+process that generated the data). Simulations are used for a wide variety of
+reasons. For example, you could use a simulation to investigate whether the spread
+of an infectious disease that has occurred in the real world is aligned with a
+model that you have proposed. 
+
+This part of the lab begins to introduce you to the steps followed to simulate
+data using R. Later in the course, we will use simulations to discuss estimation, 
+inference and sampling distributions. 
+
+For now, we generate data from a linear model $Y = a + bX + e$, where $e$ is a 
+random error (otherwise, all points would lie exactly on the line).
+
+```{r define-functions}
+# runif() makes n copies of random number between 0 and 2
+# Run this line and then take a look at X by printing it to the screen
+X <- runif(n = 100, min = 0, max = 2)
+X # Notice that there are 100 values between 0 and 2. 
+
+# Make a random error that is normally distributed 
+# We will learn more about the normal distribution in Chapter 11.
+e <- rnorm(n = 100, mean = 0, sd = 0.25)
+
+# Make Y, the reponse variable, a function of X and e
+sim_intercept <- 0 # we arbitrarily set the intercept to 0 to begin. 
+sim_slope <- 0.5 # we arbitrarily set the slope to 0.5 to begin. 
+Y <- sim_intercept + sim_slope*X + e
+dat_sim <- data.frame(Y, X)
+```
+
+**11. Make a scatter plot of Y versus X, variables in the data set `dat_sim`.**
+```{r plot-the-data}
+# use this code chunk to write your code.
+```
+
+**12. Run a linear regression of Y on X.**
+```{r run-regression}
+# use this code chunk to write your code.
+```
+
+**13. Investigate what happens if you specify `sim_slope` to equal -1 rather than
+0.5. You can do this by overwriting the contents of `sim_slope` so that it equals 
+-1 and then re-creating `Y` and `dat_sim` by copying and pasting the lines of 
+code that define `Y` and `dat_sim`, making sure to run the new lines of code.
+Also re_create the plot and re-run the linear regression. What changes?**
+
+```{r rinse-and-repeat}
+# use this code chunk to write your code.
+```
+
+Replace this text with your answer.
