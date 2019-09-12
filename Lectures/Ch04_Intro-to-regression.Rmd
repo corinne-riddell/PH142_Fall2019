@@ -512,6 +512,7 @@ We can encode these differences in a causal diagram. Here is a simple one to dem
 
 ```{r dag, echo=F, fig.height=2, fig.width=4}
 #students, you don't need to know the dagitty package or understand this code
+install.packages("dagitty")
 library(dagitty)
 
 g <- dagitty('dag {
