@@ -1,0 +1,338 @@
+---
+title: "Lab 2 Solutions"
+output: pdf_document
+---
+
+### Instructions
+
+Use your discussion section to work on this document. You do not need to submit your
+lab and solutions will be posted later today in this same project folder. Good luck!
+
+### Visualizing global cesarean delivery rates and GDP across 137 countries
+
+The proportion of pregnant women who undergo cesarean deliveries varies 
+dramatically across countries. In the US, the cesarean delivery rate is 
+around 33%. A 2018 study in the British Medical Journal found that cesarean 
+delivery rates ranged between 0.6% in South Sudan and 58.9% in the Dominican 
+Republic.^1^
+
+Over the course of lab 1, assignment 1, and lab 2, we will study the relationship 
+between countries' cesarean delivery rates and their gross domestic products (GDPs).^2,3^ 
+
+In today's lab we will:
+
+- import the data,
+- familiarize ourselves with the dataset, 
+- explore the univariate distributions of the key variables.
+
+If you haven't already, begin by knitting this document by pushing the "Knit" 
+button above. As you fill it out, you can re-knit (push the button again) and 
+see how the document changes. 
+
+Let's get started!
+
+Hit the green arrow icon in the line below to execute the three lines of code in 
+the code chunk, or execute them line by line by placing your cursor on the first l
+line and hitting cmd + enter on Mac or ctrl + enter on PC. If you do not want
+messages produced by loading `dplyr` to print in your knitted document, toggle
+`message = TRUE` to `message = FALSE` in the code chunk options. Re-knit your file
+and notice the different in the output:
+
+```{r load-libraries, message = FALSE}
+library(readr)
+library(dplyr)
+library(ggplot2)
+```
+
+- The `library` command loads the libraries `dplyr` and `ggplot2` into memory. 
+- The `dplyr` library contains functions we will use to manipulate data.
+- The `ggplot2` library contains functions to visualize data.
+
+The data on each country's cesarean delivery rate is stored in a comma separate 
+values (csv) file. We can load that data and assign it to an object called
+`CS_data` by running the code below. Hit the green arrow in the line below to 
+run the code:
+
+```{r read-in-the-data}
+CS_data <- read_csv("../../Data/Cesarean.csv")
+
+# This code re-orders the variable Income_Group in the specified order.
+# Note that it *does not* change the order of the data frame (like arrange() does)
+# Rather, it specifies the order the data will be plotted. 
+# This will make more sense when we plot the data using Income_Group, and then
+# again using Income_Group_order
+CS_data <- CS_data %>% 
+  mutate(Income_Group_order = forcats::fct_relevel(Income_Group, "Low income", 
+                                              "Lower middle income", "Upper middle income", 
+                                              "High income: nonOECD", "High income: OECD"))
+```
+
+Look over at the environment tab (on the top right pane) and make sure you see 
+your dataset there. Click the icon to the right of its name. This will open the 
+data viewer tab. Take a quick look at the data and then switch back to the 
+"Lab01.Rmd" file and move to the next step.
+
+Often, when you receive a dataset, you also receive a data dictionary that tells
+you what each variable means. Below, is an example of such a dictionary for this 
+dataset:
+
+| Variable        | Description                                         |
+|-----------------|-----------------------------------------------------|
+| Country_Name    | The name of the country                             | 
+| CountryCode     | 3-digit unique country identifier                   |                
+| Births_Per_1000 | The number of births per 1000 people in the country |
+| Income_Group     | The income group the country is categorized into    |
+| Region          | The geographic region the country belongs to        |
+| GDP_2006        | The gross domestic product (GDP) of the country in 2006 |
+| CS_rate         | The percent of births that were delivered by cesarean section |
+| Income_Group_order | The "ordered" version of Income_Group |
+
+### Look at your newly imported data
+
+In four separate code chunks, type `str(CS_data)`, `dim(CS_data)`, 
+`names(CS_data)`, and `head(CS_data)`. Execute each code chunk and study the output.
+```{r keep-exploring-the-data-1}
+str(CS_data)
+```
+
+```{r keep-exploring-the-data-2}
+dim(CS_data)
+```
+
+```{r keep-exploring-the-data-3}
+names(CS_data)
+```
+
+```{r keep-exploring-the-data-4}
+head(CS_data)
+```
+
+**In your own words, what do these functions do:**
+
+- `dim()`: <Replace with your function description.> Solution: Returns the number of rows/individuals and number of columns/variables
+- `str()`: <Replace with your function description.> Solution: Returns information about the types of variables found in the data set in terms of whether they are quantative (int, num) or categorical (Factor) and provides some information about each one.
+- `names()`: <Replace with your function description.> Solution: Returns the variable names
+- `head()`: <Replace with your function description.> Solution: Returns the first five rows
+
+**Based on these functions' outputs, who/what are the individuals in this 
+dataset? How many of them are there?**
+
+Solution: The individuals are countries. There are 137 of them.
+
+### Add a new variable
+
+**Right now, `CS_rate` is presented as a number between 0 and 1. For plotting, it 
+will be nice to have the proportion displayed as a number between 0 and 100. We 
+can use `dplyr`'s `mutate()` function to add a new variable called `CS_rate_100`
+to the dataset that takes this desired format. Write one line of code to add this
+variable to the dataset:**
+
+```{r add-new-variable}
+#solution
+CS_data <- CS_data %>% mutate(CS_rate_100 = CS_rate*100)
+```
+
+### Examine the distribution of income and geographic regions
+
+**These countries represent a wide range of income and geographic regions. Which variable groups the countries by income regions? By geographic regions?**
+
+<Replace this text with your answer.>
+
+**The variable that groups the countries by income regions is:**  Solution: `Income_Group`
+
+**The variable that groups the countries by geographic regions is:**  Solution: `Region`
+
+**These variables are categorical variables. So far in lecture, we've seen 
+categorical variables stored as `chr` variables when we've examined `str(data)`.
+Here however, these variables are stored as a `Factor` variable, which is another
+way to store categorical data. One benefit of storing them as `Factor` is that we
+can re-order the `Factor` variable in a way that makes sense for plotting and 
+later analysis. To see the values and order of a factor variable, we can use the 
+`levels()` function. To use the function, we specify which variable we would like 
+to know the levels of as follows. Run each line of code separately and compare
+the output**
+
+```{r levels-income}
+CS_data %>% pull(Income_Group_order) %>% levels
+# You won't be tested on writing this code, just know what it does
+```
+
+**The template to get the levels of a categorical variable is 
+`levels(dataset$variable_name)`. Notice the different order of the categories.
+This will affect the way the variable appears in a plot as we will see below.**
+
+**How many income groups are there?**
+
+<Replace this text with your answer.> Solution: 5
+
+**Because `Income_Group` and `Region` are categorical, we make bar charts to represent 
+their distributions. Using the `ggplot()` code you learnt during lecture, make a 
+bar chart showing the number of countries per income group using `Income_Group`.
+Then remake the plot using `Income_Group_order`.**
+
+```{r bar-chart-income}
+# solution
+ggplot(CS_data, aes(x = Income_Group)) + geom_bar()
+ggplot(CS_data, aes(x = Income_Group_order)) + geom_bar()
+```
+
+**Do you prefer the plot using `Income_Group` or `Income_Group_order`? Why?**
+
+Solution: Income_Group_order is preferred because the visualization is ordered 
+by increasing levels of income, while if you use Income_Group the order is 
+alphabetical, which puts high income first, followed by low income and then 
+middle income, which is confusing.
+
+**Did you use the argument `stat="identity"` in the code to make this bar chart? Why or why not?**
+
+Solution: No, I didn't use `stat="identity"`. This is because I did not specify a y variable
+containing a count or percent for ggplot to plot on the y-axis. When `geom_bar()`
+is doing the counting for us, then we do not use the `stat="identity"` argument.
+
+**Make a bar chart showing the number of countries per geographic region.**
+
+```{r bar-chart-region, fig.width = 11}
+#solution
+ggplot(CS_data, aes(x = Region)) + geom_bar()
+```
+
+**Based on your plot, which world region has the most countries in the data set?**
+
+Solution: Europe & Central Asia
+
+**Which geographic region had the fewest number of countries in the data set**
+
+Solution: North America
+
+**Note that the above code chunk had the chunk option "fig.width=11". Try changing the
+setting to a lower number, like 9 and re-running the chunk. Notice how the width
+of the rendered plot changes. Change it back to 11 so that the x-axis labels 
+don't look too cramped.**
+
+### Examine the distribution of `GDP_2006` and `CS_rate_100` across countries 
+
+**`GDP_2006` and `CS_rate_100` are quantitative, meaning that we use histograms 
+rather than bar charts to examine their distributions. Using code you learnt in 
+class, make a histogram of `GDP_2006`. Pay attention to the message that R 
+outputs when running the code. It is telling you that by default the data is grouped into 30 bins for 
+plotting.**
+
+```{r histogram-GDP-2006}
+#solution
+ggplot(CS_data, aes(x = GDP_2006)) + geom_histogram()
+```
+
+**Rather than letting R choose the number of `bins` we can set `binwidth = number`
+within the geom function to choose the width of the bins. Try setting the 
+binwidth to different amounts and see how it changes the look of the plot.**
+
+**To choose a binwidth, look at the x-axis of the histogram you just made. Because
+we are plotting GDP across a wide variety of countries, it might make sense to 
+choose a bin width in the 1000s. Thus, the range of the variable matters when
+choosing a good bin width.** 
+
+```{r histogram-GDP-2006-binwidth}
+# solution
+ggplot(CS_data, aes(x = GDP_2006)) +
+  geom_histogram(binwidth = 2000) 
+# students don't need to choose 2000. But should specify a binwidth and it 
+# shouldnt be too large or too small.
+```
+
+**Next, make a histogram for cesarean delivery rates using the variable 
+`CS_rate_100`. First run your code without binwidth set and then add in the 
+binwidth argument to choose the size.** 
+
+```{r histogram-CS}
+# solution
+ggplot(CS_data, aes(x = CS_rate_100)) + geom_histogram(binwidth = 4)
+# students don't need to choose binwidth = 4. But should specify a binwidth and it 
+# shouldnt be too large or too small.
+```
+
+### Polish up your plots
+
+**Your plots look great so far, but let's get them ready to present at a meeting 
+or in a report. To do this please update the plot and axes titles (`labs`), and 
+change the `fill` or `col`or of the bars. Here is a [big list](http://sape.inf.usi.ch/quick-reference/ggplot2/colour) 
+of colors that you can set col and fill equal to. For example col = "orchid1"
+will change the color to a pinky-purple.**
+
+**Below present your final plots with updated titles, labels, colors, and fills. 
+To do this, extend the ggplot code you wrote above with the functions and arguments just described:**
+
+```{r your-final-plots}
+#Here is one plot showing you how to add titles and change the color and fill
+ggplot(CS_data, aes(x = CS_rate_100)) + 
+  geom_histogram(binwidth = 4, col = "white", fill = "sienna2") + 
+  labs(y = "Count of countries", x = "Cesarean delivery rate (%)", 
+         title = "Distribution of cesarean delivery rates across countries") +
+  theme_minimal() 
+```
+
+### Save your plots to separate files
+
+Sometimes, you need to save plots as PNG or JPEG to include in a PowerPoint 
+presentation or submit to a research journal for publication. The `ggsave()`
+function is used to save plots as separate files. Create a "Plots" folder in your
+project folder by clicking the New Folder button. Be sure to make the folder in 
+the main PH142 directory, rather than inside your Code/ or Data/ folders.
+
+Quickly read the documentation of the `ggsave()` function by executing this code
+which opens a help window in the bottom right pane:
+
+```{r what-is-ggsave}
+?ggsave
+
+# solution 1
+# this code plots the last plot that you rendered as a png of specified size in inches:
+# Note, you need to have created a "Plots" folder in the main project directory in order for this to work
+ggsave(filename = "../../Plots/hist-CS.png", plot = last_plot(),
+       device = "png", width = 9, height = 5, units = "in")
+
+# solution 2 
+# first save the plot in R by assigning it a name and then ggsave() the plot by its name
+# Notice that the plot resolution is set using `dpi = 720` here which 
+# is often in the range of dpis requested when submitting figures for 
+# publication as part of a journal article.
+
+cs_hist <- ggplot(CS_data, aes(x = CS_rate_100)) + 
+  geom_histogram(binwidth = 4, col = "white", fill = "sienna2") + 
+  labs(y = "Count of countries", x = "Cesarean delivery rate (%)", 
+         title = "Distribution of cesarean delivery rates across countries") +
+  theme_minimal() 
+
+# Note, you need to have created a "Plots" folder in the main project directory in order for this to work
+ggsave(filename = "../../Plots/hist-CS.png", plot = cs_hist,
+       device = "png", width = 9, height = 5, units = "in", dpi = 720)
+```
+
+Try figuring out how to save a plot based on the documentation and running your 
+attempts in a code chunk. Don't worry about producing an error or saving your 
+plot in the wrong place -- that is all part of coding and learning new functions.
+
+**Hint: To specify the Plots/ folder as the `path`, modify the path we sent to 
+`read_csv()` when we specified the Data/ folder.** 
+
+**When you are done, knit your R document one last time and ensure it looks good! 
+Change anything you don't like. You can choose to knit to .docx or .pdf by 
+selecting these options form the dropdown menu next to knit, in the case that 
+you'd like to save the completed file onto your computer.** 
+
+### References
+
+1. Boatin AA, Schlotheuber A, Betran AP, Moller AB, Barros AJ, Boerma T, Torloni MR, Victora CG, Hosseinpoor AR. Within country inequalities in caesarean section rates: observational study of 72 low and middle income countries. BMJ. 2018;24(360):k55. DOI: 10.1136/bmj.k55.
+
+2. Gibbons L, Belizán JM, Lauer JA, Betrán AP, Merialdi M, Althabe F. The global numbers and costs of additionally needed and unnecessary caesarean sections performed per year: overuse as a barrier to universal coverage. World Health Organization; 2010. Available at: http://www.who.int/healthsystems/topics/financing/healthreport/30C-sectioncosts.pdf. Accessed October 4, 2015.
+
+3. The World Bank. GDP per capita (current US$). Washington, DC; Available at: http://data.worldbank.org/indicator/NY.GDP.PCAP.CD. Accessed Sep 30, 2015.
+
+**Submission** (Tutorial: https://www.youtube.com/watch?v=NYNDi_zJRGE)
+
+- 1. Before submitting, make sure the file knits properly, otherwise you won't receive credit for completing the lab. 
+
+- 2. Then, click on the **Terminal** tab in the panel below.
+
+- 3. Copy and paste the line of code (cd; cd PH142_Fall19/Assignments/Assignment01; python3 ok --submit;) into **Terminal** panel below and press "enter". 
+
+- 4. Follow the remaining prompts in the terminal to submit your assignment. You can watch this video tutorial online (https://www.youtube.com/watch?v=NYNDi_zJRGE) for a more detailed step-by-step. 
