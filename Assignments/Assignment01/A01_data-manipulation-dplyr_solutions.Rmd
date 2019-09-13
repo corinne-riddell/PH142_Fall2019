@@ -1,0 +1,170 @@
+---
+title: 'Assignment 1 Solutions'
+output: pdf_document
+---
+
+### Sleep times in mammals
+
+The file `sleep.csv` contains the sleeptimes and weights for a set of mammals. 
+Use the following code to read the file into memory and store it in the R object
+called sleep:
+
+```{r import-and-save-data}
+library(tidyverse)
+sleep <- read_csv("../../Data/sleep.csv")
+```
+
+Notice that an object called `sleep` appeared in the Environment tab. Use four
+useful functions discussed in lecture to examine the sleep data set:
+
+```{r four-functions}
+# solution
+
+dim(sleep)
+names(sleep)
+head(sleep)
+str(sleep)
+```
+
+| Column name	| Description |
+|-------------|-------------|
+|name	|common name|
+|genus	|taxonomic rank|
+|vore	|carnivore, omnivore or herbivore?|
+|order	| taxonomic rank|
+|conservation	|the conservation status of the mammal|
+|sleep_total|	total amount of sleep, in hours|
+|sleep_rem |	Rapid eye movement (REM) sleep, in hours |
+|sleep_cycle|	length of sleep cycle, in hours|
+|awake|	amount of time spent awake, in hours|
+|brainwt|	brain weight in kilograms|
+|bodywt|	body weight in kilograms|
+
+1) Select a set of columns. Specifically select the `awake`, `brainwt`, and `bodywt` columns. Assign this smaller dataset to a data frame called `smaller_sleep_data`
+
+```{r}
+# solution
+smaller_sleep_data <- sleep %>% select(awake, brainwt, bodywt)
+
+#alternative solution:
+smaller_sleep_data <- select(sleep, awake, brainwt, bodywt)
+```
+
+2) To select a range of columns by name, use the “:” (colon) operator. Redo the 
+selection for question 1, but use the colon operator:
+
+```{r}
+# solution
+#note that this only works because these variables appear side-by-side in the dataset
+smaller_sleep_data <- sleep %>% select(awake:bodywt)
+```
+
+3) Select all the columns except for the `vore` variable
+
+```{r}
+# solution
+sleep %>% select(-vore)
+```
+
+4) Run the following chunk of code. What does it return?
+
+```{r}
+select(sleep, starts_with("sl"))
+```
+
+Solution: It returns the columns that start with sl: `sleep_total`, `sleep_rem`, `sleep_cycle`
+
+5) Rewrite the previous chunk of code using the pipe operator.
+
+```{r}
+# solution
+
+sleep %>% select(starts_with("sl"))
+```
+
+6) Filter the rows for mammals that sleep a total of more than 16 hours.
+
+```{r}
+#solution
+
+sleep %>% filter(sleep_total > 16)
+```
+
+7) Filter the rows for mammals that sleep a total of more than 16 hours and have
+a body weight of greater than 1 kilogram.
+
+```{r}
+#solution
+
+sleep %>% filter(sleep_total > 16 & bodywt > 1)
+
+# alternative solution
+
+sleep %>% filter(sleep_total > 16, bodywt > 1)
+```
+
+
+8) Suppose you are specifically interested in the sleep of horses and giraffes.
+Write a line of code to print the data frame for horses and giraffes only:
+
+```{r}
+#solution
+sleep %>% filter(name %in% c("Horse", "Giraffe")) #Notice: quotes and capitalization!
+```
+
+9) Order the dataset by sleep time from shortest sleep time to longest sleep time
+
+```{r}
+#solution
+sleep %>% arrange(sleep_total)
+```
+
+10) Now order for longest sleep time to shortest sleep time
+
+```{r}
+#solution
+sleep %>% arrange(-sleep_total)
+```
+
+11) Suppose you are interested in the order of sleep time, but according to whether
+the animal is a carnivore, herbivore, insectivore, or omnivore. Rewrite the above statement
+to order sleep time according to the type of "-vore" that then animal is:
+
+```{r}
+#solution
+sleep %>% arrange(vore, -sleep_total)
+```
+
+12) Create a new column called `rem_proportion` which is the ratio of rem sleep to total amount of sleep.
+
+```{r}
+#solution
+sleep %>% mutate(rem_proportion = sleep_rem/sleep_total)
+```
+
+13) Copy your previous line of code. Revise it to add a second column called bodywt_grams which is the bodywt column in grams.
+
+```{r}
+#solution
+sleep %>% mutate(rem_proportion = sleep_rem/sleep_total, bodywt_grams = bodywt * 1000)
+```
+
+14) Calculate the average sleep time across all the animals in the dataset using
+a dplyr function. Call the new variable `sleep average`:
+
+```{r}
+#solution
+sleep %>% summarize(sleep_average = mean(sleep_total))
+```
+
+15) Calculate the average sleep time for each type of "-vore". Hint: you'll need
+to use two dplyr functions!
+
+```{r}
+#solution
+sleep %>% 
+  group_by(vore) %>%
+  summarize(sleep_average = mean(sleep_total))
+```
+
+
