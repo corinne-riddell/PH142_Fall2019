@@ -2,7 +2,7 @@
 title: "Chapter 9: Essential Probability Rules"
 author: "Corinne Riddell"
 date: "September 25, 2019"
-output: pdf_document
+output: slidy_presentation
 ---
 
 ### Learning objectives for today
@@ -413,7 +413,7 @@ A **sample space** is the set of all possible outcomes. It is denoted by the let
 
 - An event is one possible outcome or a set of outcomes
 - For the discrete example, the event could be being divorced. Or it could be being divorced or being widowed.
-- For the conitnuous example, the event could be a value between 0.4 and 0.5.
+- For the continuous example, the event could be a value between 0.4 and 0.5.
 - Question: Why do we determine the probability of these events?
 - Answer: We need to know the probabilities associated with the sample space.
 
@@ -551,8 +551,7 @@ could use the density curve to calculate:
 - The probability the the CS rate is less than 20% or greater than 40%, or 
 $P(CS < 0.2$ or $CS > 0.4)$. Since these ranges do not overlap (they are disjoint), 
 we can rewrite this as $P(CS < 0.2) + P(CS > 0.4)$ 
-- The probability that the CS rate is larger than 40% is written as $P(CS > 0.4)$
-We can also write it as $P1 - P(CS \leq 0.4)$ by applying the complement rule.
+- The probability that the CS rate is larger than 40% is written as $P(CS > 0.4)$. We can also write it as $1 - P(CS \leq 0.4)$ by applying the complement rule.
 
 ### Interpretations of probability
 
@@ -572,7 +571,7 @@ phenomenon
 been taken. For example $P(X=x)$ asks, what is the probability that random 
 variable $X$ takes the value $x$? 
 - For continuous random variables, we only calculate the probability of $X$ falling
-in a specified range, e.g., $P(X < x)$, $P(X >= x)$, or $P(x_1 < X < x_2)$
+in a specified range, e.g., $P(X < x)$, $P(X \geq x)$, or $P(x_1 < X < x_2)$
 - Remember: for continuous random variables $P(X=x)=0$!
 
 ### The mean and standard deviation revisted
