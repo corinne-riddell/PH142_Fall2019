@@ -1,0 +1,235 @@
+---
+title: "Assignment 4"
+author: "Your name and student ID"
+date: "Today's date"
+output:
+  pdf_document: default
+---
+
+* Due date: Friday, October 4 5:00pm.
+* Late penalty: 50% late penalty if submitted within 24 hours of due date, no 
+marks for assignments submitted thereafter.
+* This assignment is marked out of 29. Marks are indicated for each 
+question. 
+* Submission process: Please submit your assignment *directly* to 
+Gradescope (see the last page for more details). Do not remove any `\newpage` 
+tags from this file.
+
+Helpful hints:
+
+- Every function you need to use was taught during lecture! So you may need to 
+revisit the lecture code to help you along by opening the relevant files on data 
+hub. Alternatively, you may wish to view the code in the condensed PDFs posted 
+on bCourses (under Files > Lectures). Good luck!
+
+- Knit your file early and often to minimize knitting errors! If you copy and 
+paste code for the slides, you are bound to get an error that is hard to 
+diagnose. Typing out the code is the way to smooth knitting! We recommend 
+knitting your file each time after you write a few sentences/add a new code 
+chunk, so you can detect the source of knitting errors more easily. This will 
+save you and the GSIs from frustration!
+
+- If your code runs off the page of the knitted PDF then you will LOSE POINTS! To
+avoid this, have a look at your knitted PDF and ensure all the code fits in the 
+file. When it doesn't, go back to your .Rmd file and add spaces (new lines) using
+the return or enter key so that the code runs onto the next line.
+
+\newpage
+
+**[12 points] Question 1: Simulating birth defect data and sampling from an infinitely large population** 
+
+The Center for Disease Control and Prevention (CDC) estimates that 1 in every
+33 infants is born with a birth defect in the United States each year.
+
+a) [3 points] Define a random variable for "birth defect". Write down the 
+probability model for the random variable. Round each percentage to two decimal
+places (e.g., 0.43224 would be rounded to 43.22%). Is the sample space discrete
+or continuous?
+
+Replace the text with your list of proportions and your explanation.
+
+You might want to use the table template below to write out your probability 
+model. If not, then delete it.
+
+| Tables   |      Are     |  Cool |
+|----------|--------------|-------|
+| yadi     | type stuff   | X     |
+| yadi     | more stuff   | Y     |
+| yada     | etc          | Z     |
+
+\newpage
+
+b) [2 points] Simulate data that equals 0 if there is no birth defect and equals
+1 if there is a birth defect. Simulate this data for 200 births at a local 
+hospital. Be sure to use the risk of birth defect from part a). Assign your 
+simulated output the name `sim_01`. Hint: See the lab "lab04_probability" to 
+remind yourself how to simulate data of this form. Print your simulated births 
+to the screen.
+
+Before you run your simulation, we will "set the seed". We all will set the seed
+to 100. This means that everyone's simulation will yield the exact same dataset.
+
+```{r set-seed}
+set.seed(100) 
+# execute this line before you write your simulation code.
+# only execute the set.seed() function one time. 
+```
+
+```{r simulate-200-births}
+#replace this line with your simulation code.
+```
+
+Notice that `sim_01` is not a data frame (it is a vector of numbers). The 
+following code stores `sim_01` as a data frame and changes its variable name. 
+IMPORTANT: Remove `eval=F` from the chunk options and run this code and view 
+`sim_01` in the Viewer pane. Otherwise, you will have trouble knitting your file.
+
+```{r conduct-sim, message=F, warning=F, eval=F}
+library(dplyr)
+sim_01 <- as.data.frame(sim_01) # watch what happens to sim_01 in your environment
+names(sim_01) # prints the variable names in the sim_01 data frame
+sim_01 <- sim_01 %>% rename(birth_defect = sim_01)
+```
+
+\newpage
+
+c) [2 points] Write code to determine the number of birth defects that occurred in your 
+simulation, and the corresponding proportion with birth defects. Assign your 
+output the name `output_01`. Print `output_01` to the screen. Hint: Use `dplyr` functions
+to do this.
+
+```{r num-and-proportion}
+#replace this line with your code
+```
+
+\newpage
+
+d) [2 marks] Re-run your simulation four more times and assign the output to a unique 
+name each time. Print to the screen the number and proportion after each run. 
+(Basically, "recycle" the code above four times)
+
+```{r rerun-sims}
+#replace this line with your code
+```
+
+\newpage
+
+e) [2 marks] List in increasing order the simulated proportions from each of your five
+simulations. Did you get close to the true value? Explain why there is variation
+in the proportions across the simulations.
+
+Replace the text with your list of proportions and your explanation.
+
+\newpage
+
+f) [1 mark] Suppose that rather than simulating 5 samples of size 200, we simulated 5 samples
+of size 1000. In 1-2 sentences, how would you expect the group of proportion 
+estimates from part e) to be different? Comment both on the accuracy of these 
+values at predicting the true value, and their variance. If you're not sure, you
+can re-run your simulation with a larger sample size and see how the results 
+change to deduct the difference.
+
+Replace the text with your answer.
+
+--------------------------------------------------------------------------------
+
+\newpage
+
+**[8 points] Question 2: Probability of HIV and Hepatitis C**
+
+Approximately 1.1 million Americans have HIV and 3.5 million Americans have 
+Hepatitis C (HCV). The number of individuals with coinfection (e.g., both HIV 
+and HCV) is 300,000. Among individuals with HIV, approximately 25% have 
+Hepatitis C. The total US population was approximately 321 million at the time 
+of these statistics.
+
+references for these stats:
+https://www.cdc.gov/hiv/basics/statistics.html
+https://www.cdc.gov/media/releases/2016/p0504-hepc-mortality.html
+https://www.cdc.gov/hepatitis/populations/hiv.htm
+
+\newpage
+
+a) [2 points] Calculate the probability that a randomly chosen American will have HIV. 
+Calculate the probability that a randomly chosen American will have HCV. Convert
+
+Replace this text with your calculations
+
+\newpage
+
+b) [2 points] Without using the number of co-infections provided in the question,
+calculate the probability that someone will have both HIV and HCV.
+
+Replace this text with your calculations
+
+\newpage
+
+c) [2 points] Are HIV and HCV infections independent? Show work to support your 
+answer. 
+
+Replace this text with your calculations
+
+\newpage
+
+d) [2 points] In general, does P(A|B) equal P(B|A)? Calculate P(HIV | HCV) and
+report whether or not it is equal to P(HCV | HIV).
+
+Replace this text with your calculations
+
+\newpage
+
+**[9 points] Question 3: Screening for lung cancer**
+
+Background reading: Read pages 258-261 (and optionally 261-264) of Baldi & 
+Moore, Edition 4. (For earlier editions, look for the section on diagnostic 
+testing in medicine or on screening which covers sensitivity, specificity, 
+negative predictive value, and positive predictive value). 
+
+Lung cancer is the leading cause of cancer-related deaths in the United States.
+Researchers examined the idea of testing all Medicare-enrolled heavy smokers for
+lung cancer with a computed tomography (CT) scan every year. In this population, 
+the lifetime chance of developing lung cancer is high. In any given year, 
+approximately 3% of heavy smokers develop lung cancer. The CT scan positively
+identifies lung cancer 89% of the time, and it gives a negative result for 93% 
+of individuals who do not have lung cancer.
+
+\newpage
+
+a) [3 points] Use probability notation to express the three probabilities cited.
+Make sure to define each event using a capital letter. Provide the terminology 
+for the 89% and 93% values based on your readings.
+
+Replace this text with your answer.
+
+\newpage
+
+b) [3 points] What percent of CT scans in this target population would be 
+positive? Answer this question by making either a probability tree or using 
+absolute frequencies. Show your work.
+
+Replace this text with your answer.
+
+If you are making a tree diagram, you may want to upload an image 
+of a hand-drawn tree diagram (this is optional) rather than trying to do this in R.
+If so, use the following code to upload an image below. When you knit your file,
+make sure the image is oriented correctly (right side up) and a reasonable side.
+If not, you can edit your original image using your computer's software (e.g., 
+preview on a Mac). Be sure to remove the option "eval = F" if using  this code 
+or it won't execute the code when you knit the file:
+
+```{r show-image, out.width="80%", eval=F}
+library(knitr)
+include_graphics("../Images/your-scans-name.jpg")
+# Once you replace the above line with your file's name (after uploading the file
+# to datahub's Image sub-directory) you can execute the line of code and 
+# verify that the tree diagram is printed below the code chunk.
+```
+
+\newpage
+
+c) [3 points] What is the probability that a Medicare-enrolled heavy smoker who gets a 
+positive scan actually has lung cancer? Write out the probability statement for
+this amount and calculate it based on your part (a) work. What term from your 
+reading does this value represent? 
+
+Replace this text with your answer.
