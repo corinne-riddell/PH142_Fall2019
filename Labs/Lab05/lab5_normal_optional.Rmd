@@ -6,7 +6,7 @@ output: pdf_document
 ---
 ### Instructions for Part 2
 
-Part 2 of this lab introduces the normal distribution.
+Part 2 of this lab introduces the Normal distribution.
 
 Notation reminder: Baldi and Moore use a compact notation for specifying that a population has a distribution that follows a normal curve with mean $\mu$ and standard deviation $\sigma$ : N( $\mu$ , $\sigma$ )
 
