@@ -24,8 +24,6 @@ Use R to find the standardized value z that satisfies each of the following cond
 #Replace with your answer
 ```
 
-
- 
 (b)	The probability is 0.35 that a randomly selected observation falls above z.
 
 ```{r Section II Q1b}
@@ -88,7 +86,8 @@ How much difference do a couple of weeks make for birthweight? Late preterm babi
 	
 **Question 4. Compare your answers to the parts of exercises 2 and 3. What do you notice?**
 
-  Replace this text with your answer.
+Replace this text with your answer.
+
 
 
 **Question 5. Newborn Respirations. **  
@@ -105,7 +104,7 @@ The probability that a randomly chosen newborn has a respiratory rate of 55 per 
 ```{r Section II Q5b}
 #Replace with your answer
 ```
-	
+
 **Question 6. Drosophila.**
 (From Baldi and Moore, 3E questions 11.20 and 11.22, 4E question 11.23)
 
@@ -118,19 +117,18 @@ The common fruit fly, Drosophila melanogaster, is the most studied organism in g
 ```
 
 
-
 **Question 7. Z scores.**
 (From Baldi and Moore, 3E question 11.25, 4E question 11.27)
 
-Use R’s pnorm function to find the proportion of observations from a standard Normal distribution that fall in each of the following regions. In each case, sketch a standard Normal curve and shade the area representing the region.
+Use R’s `pnorm` function to find the proportion of observations from a standard Normal distribution that fall in each of the following regions. In each case (on scratch paper), sketch a standard Normal curve and shade the area representing the region (you don't have to submit your sketch).
 
-(a)	z ≤ −2.25
+(a) z <= -2.25
 ```{r Section II Q7a}
 #Replace with your answer
 ```
 
 
-(b)	z ≥ −2.25
+(b)	z >= -2.25
 ```{r Section II Q7b}
 #Replace with your answer
 ```
@@ -142,10 +140,11 @@ Use R’s pnorm function to find the proportion of observations from a standard 
 ```
 
 
-(d) −2.25 < z < 1.77
+(d) -2.25 < z < 1.77
 ```{r Section II Q7d}
 #Replace with your answer
 ```
 
 
 
+	
