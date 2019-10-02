@@ -1,0 +1,151 @@
+---
+title: "Lab 5: Normal Distribution (optional)"
+author: "Name and Student ID"
+date: "Today's Date"
+output: pdf_document
+---
+### Instructions for Part 2
+
+Part 2 of this lab introduces the normal distribution.
+
+Notation reminder: Baldi and Moore use a compact notation for specifying that a population has a distribution that follows a normal curve with mean $\mu$ and standard deviation $\sigma$ : N( $\mu$ , $\sigma$ )
+
+R Functions Reminder: `qnorm` takes a probability as its input and gives back a value on the distribution (aka a z-score if the distribution is N(0,1)). By default, it assumes the probability area you enter (as a decimal, not a percent) is the area below (or less than) the z score you need.  The `pnorm` function takes a  z value or and X value as its input and gives back a probability area. 
+
+**Question 1. Z scores. **
+
+(From Baldi and Moore, 3E question 11.27, 4E question 11.29) 
+
+Use R to find the standardized value z that satisfies each of the following conditions. In each case, sketch a standard Normal curve with your value of z marked on the axis.
+
+(a)	The probability is 0.8 that a randomly selected observation falls below z.
+
+```{r Section II Q1a}
+#Replace with your answer
+```
+
+
+ 
+(b)	The probability is 0.35 that a randomly selected observation falls above z.
+
+```{r Section II Q1b}
+#Replace with your answer
+```
+
+
+**Question 2. Full-Term Birth Weights** 
+
+(From Baldi and Moore, 3E question 11.31, 4E question 11.33) 
+
+For babies born at full term (37 to 39 completed weeks of gestation), the distribution of birth weight (in grams) is approximately normally distributed with a mean of 3350 grams and a standard deviation of 440 grams, N(3350,440).
+
+
+(a) What is the 25th percentile of the birthweights for full term babies?
+	
+```{r Section II Q2a}
+# Replace with your answer
+```
+
+   
+(b) What is the 90th percentile of the birthweights for full term babies?
+	
+```{r Section II Q2b}
+#Replace with your answer
+```
+
+
+(c) What is the range of the middle 50% of birthweights for full term babies?
+	
+```{r Section II Q2c}
+#Replace with your answer
+```
+
+
+
+**Question 3. Late Pre-Term Birth Weights** 
+(From Baldi and Moore, 3E question 11.32, 4E question 11.34) 
+
+How much difference do a couple of weeks make for birthweight? Late preterm babies are born with 35 to 37 weeks completed of gestation. The distribution of birth weight (in grams) or late preterm babies is approximately normally distributed with a mean of 2750 grams and a standard deviation of 560 grams,  N(2750,560).
+
+
+(a) What is the 25th percentile of the birthweights for late-preterm term babies?
+```{r Section II Q3a}
+#Replace with your answer
+```
+        
+
+(b) What is the 90th percentile of the birthweights for late-preterm babies?
+```{r Section II Q3b}
+#Replace with your answer
+```
+
+
+(c) What is the range of the middle 50% of birthweights for late-preterm babies?
+```{r Section II Q3c}
+#Replace with your answer
+```
+
+	
+**Question 4. Compare your answers to the parts of exercises 2 and 3. What do you notice?**
+
+  Replace this text with your answer.
+
+
+**Question 5. Newborn Respirations. **  
+(From Baldi and Moore, 3E questions 11.15-11.17, 4E question 11.17-11.19)
+
+(a) The respiratory rate per minute in newborns varies according to a distribution that is approximately Normal with mean 50 and standard deviation 5. 
+The probability that a randomly chosen newborn has a respiratory rate of 55 per minute or more is approximately:
+
+```{r Section II Q5a}
+#Replace with your answer
+```
+
+(b) The probability that a randomly chosen newborn has a respiratory rate per minute between 40 and 55 is approximately: 
+```{r Section II Q5b}
+#Replace with your answer
+```
+	
+**Question 6. Drosophila.**
+(From Baldi and Moore, 3E questions 11.20 and 11.22, 4E question 11.23)
+
+The common fruit fly, Drosophila melanogaster, is the most studied organism in genetic research because it is small, easy to grow, and reproduces rapidly. The length of the thorax (where the wings and legs attach) in a population of male fruit flies is approximately Normal with mean 0.800 millimeters (mm) and standard deviation 0.078 mm.
+
+(a)	Choose a male fruit fly at random. The probability that the fly you choose has a thorax longer than 1 mm is about:
+
+```{r Section II Q6a}
+#Replace with your answer
+```
+
+
+
+**Question 7. Z scores.**
+(From Baldi and Moore, 3E question 11.25, 4E question 11.27)
+
+Use R’s pnorm function to find the proportion of observations from a standard Normal distribution that fall in each of the following regions. In each case, sketch a standard Normal curve and shade the area representing the region.
+
+(a)	z ≤ −2.25
+```{r Section II Q7a}
+#Replace with your answer
+```
+
+
+(b)	z ≥ −2.25
+```{r Section II Q7b}
+#Replace with your answer
+```
+
+
+(c)	z > 1.7
+```{r Section II Q7c}
+#Replace with your answer
+```
+
+
+(d) −2.25 < z < 1.77
+```{r Section II Q7d}
+#Replace with your answer
+```
+
+
+
