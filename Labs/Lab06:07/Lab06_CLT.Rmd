@@ -1,0 +1,156 @@
+---
+title: 'Lab 6: Introducing the Central Limit Theorem'
+output: pdf_document
+---
+
+# Introduction 
+
+This is a collaborative assignment that the entire lab section will conduct 
+together.  We will all contribute to a central data source (a google sheet) and 
+the GSI will summarize the results as the class progresses.  The purpose is to
+develop a very concrete idea of sampling distributions, and to see the central 
+limit in (live) action.  
+
+# The underlying population
+
+Suppose you had a data frame containing the **entire population** of all
+residents of Alameda County. You have data on three variables:
+
+1.  Born either out (=1) versus in (=0) the county.
+2.  Number of siblings (integer)
+3.  Number of visits to the hospital last year
+
+```{r import-dataset}
+library(tidyverse)
+alameda_pop <- read_csv("../../Data/L05_Alameda.csv")
+head(alameda_pop)
+```
+
+1. Read in the data and assign it to the name `alameda_pop`. Calculate the true 
+(population) mean, and make histograms or bar charts of the distribution for each 
+variable.  
+
+```{r readin, message = F, warning = F}
+# write your code here
+```
+
+Notice that the distribution of number of siblings and number of hospital visits
+are discrete distributions and both skewed right. Today, we will focus on the 
+distribution of the number of siblings `num_sibs`. Remember, we know the population
+mean exactly, because we have all the data. You calculated the underlying population
+mean in the code chunk above.
+
+### Calculating the sampling distribution
+
+We are now going to look at the approximate **sampling distribution for the sample mean**
+of the `num_sibs` in (live) action. Remember from earlier lectures that a 
+**sampling distribution** is a distribution for a statistic, like the sample 
+proportion or the sample mean.
+
+Each student will be tasked with repeatedly taking a random sample of the population. 
+Once you take your sample you will compute the sample mean and add it to a 
+shared google sheet. As the data is added to the google sheet, notice how the graph 
+to the right of the data changes; this illustrate how the sampling distribution varies for 
+increasingly larger sample sizes.
+
+The GSIs will provide you the link to the communal google sheet. The columns in 
+the sheets are  `n (Sample_size)` `mean(numSibs)` `Name (your sign in)`.
+
+### Your task
+
+1. Randomly generate 10 simple random samples of size $n=5$ from the population.
+Calculate the average number of siblings for each of your samples. We wrote code
+to start you off, which you can simply copy and paste 10 times to generate ten 
+randomly drawn samples and their sample means.
+
+```{r size5}
+size_5 <- sample_n(alameda_pop, 5, replace = FALSE)
+size_5 %>% summarise(mean = mean(num_sibs))
+```
+
+After you've calculated 10 sample means using the above code, copy and paste your
+data into the google sheet for your lab section. The links to all the 
+google sheets are:
+
+- 101B (Thursday 5-7pm): https://docs.google.com/spreadsheets/d/130FOigRrcdzyMpxSmzxEcdx2TOthUeKZFBpfJgHpbWk/edit?usp=sharing
+- 102B (Wednesday 2-4pm): https://docs.google.com/spreadsheets/d/1sVx2Vd_57DWNHRvQ1UP_BhaMuRUnc-H-L-f5Ujuv-fs/edit?usp=sharing
+- 103B (Friday 9-11am): https://docs.google.com/spreadsheets/d/1sJpPRIyl83CcFwOyfwJCgyM1LubDZx-RvAfYwG1v8iA/edit?usp=sharing
+- 104B (Wednesday 9-11am): https://docs.google.com/spreadsheets/d/1iOUF5bohUL3_tEHkjOjXC_bueFVLm-sA-lWtxHFLgS0/edit?usp=sharing
+- 105B (Wednesday 4-6pm):  https://docs.google.com/spreadsheets/d/1PwcGfK4dKbybxFfrwXm8-H4yCzKVBzCenDaf902Btlg/edit?usp=sharing
+- 106B (Wednesday 5-7pm): https://docs.google.com/spreadsheets/d/1AP3oewsuzDDpG6oPnMEqXXjzYNY1Q2EBQjycb5aSokg/edit?usp=sharing
+- 107B (Thursday 8-10am):  https://docs.google.com/spreadsheets/d/15JdSP4V3-K5BY76sxRXL3wQcDWhNkuAXxPXzqD88Fo0/edit?usp=sharing
+- 108B (Wednesday 1-3pm):  https://docs.google.com/spreadsheets/d/151RrhBvC33sb_4mJDl5ibNOPJRKvKQK4LlCCHg-1pDA/edit?usp=sharing
+- 109B (Wednesday 9-11am): https://docs.google.com/spreadsheets/d/1bR2eXPNrdKIi_Cxw5nllQFPwR3-KWcvhA93a6IfRxhc/edit?usp=sharing
+- 110B (Friday 9-11am):  https://docs.google.com/spreadsheets/d/17Td3U8t4MoH0nCOTevhJjsiENPaYAWT_egRclsxM9IM/edit?usp=sharing
+
+Once the sheet is full, look at the plot of the **sampling distribution** for
+the mean number of siblings when $n=5$. 
+
+- What is the range of the sampling distribution of the mean? 
+
+Replace with your answer.
+
+- What is the shape of the sampling distribution of the mean?
+
+Replace with your answer.
+
+- What is the mean of the sampling distribution of the mean?
+
+Replace with your answer.
+
+Once the class has examined the sampling distribution when $n=5$, repeat the 
+same steps for n=50. 
+
+2. Repeat for a sample size of $n=50$
+
+```{r size50}
+size_50 <- sample_n(alameda_pop, 50, replace = FALSE)
+size_50 %>% summarise_all(mean)
+```
+
+After you calculated your 10 sample means, navigate to the google sheet from 
+before, but switch to the sheet with $n=50$ (you can switch tabs in the bottom left).
+Add your data for $n=50$.
+
+Once this is done, look at the plot to the right; now with $n=50$
+
+- What is the range of the sampling distribution of the mean? How does it compare
+to when $n=5$?
+
+Replace with your answer.
+
+- What is the shape of the sampling distribution of the mean? How does it compare
+to when $n=5$?
+
+Replace with your answer.
+
+- What is the mean of the sampling distribution of the mean?
+
+Replace with your answer.
+
+3. Repeat the entire process for sample size $n=500$.
+
+```{r size500}
+size_500 <- sample_n(alameda_pop, 500, replace = FALSE)
+size_500 %>% summarise_all(mean)
+```
+
+- What is the range of the sampling distribution of the mean? How does it compare
+to when $n=5$ and $n=50$?
+
+Replace with your answer.
+
+- What is the shape of the sampling distribution of the mean? How does it compare
+to when $n=5$ and $n=50$?
+
+Replace with your answer.
+
+- What is the mean of the sampling distribution of the mean?
+
+Replace with your answer.
+
+4. Suppose you have 5000 classmates, and they have done this lab and added their data to this 
+sheet: https://docs.google.com/spreadsheets/d/1AXStOd618raoWvrBequxOh5CDwgisFJoHo50fmcKb_E/edit?usp=sharing
+
+Open the link, and look at the resulting sampling distributions for $n=5$, $n=50$, and $n=500$.
+This is what happens when you repeat the sampling 5000 times.

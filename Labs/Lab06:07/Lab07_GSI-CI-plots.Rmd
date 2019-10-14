@@ -1,0 +1,101 @@
+---
+title: 'Lab 7: Plots of the sampled means and their confidence intervals'
+output: pdf_document
+---
+
+This file is for the GSI, though you can run the code too if you'd like.
+
+```{r sample-size-5}
+library(googlesheets)
+
+# fyi, sheet URLs (you might not need these, but make sure you first open the sheet in your browser or the following code won't run.)
+
+# Lab 101B: https://docs.google.com/spreadsheets/d/1bWatXMlpJLvOR0ch4Hox-5kMHcsit-32nAuPXhYgXMI/edit?usp=sharing
+# Lab 102B: https://docs.google.com/spreadsheets/d/1V8TtSV6uv7prZIYcGQTn9QQ482IajVYLX6E4LZjwfRw/edit?usp=sharing
+# Lab 103B: https://docs.google.com/spreadsheets/d/1diY17Q78CVczyLFOSwlySRwF0Ef9T96o8IYO6lHEjPA/edit?usp=sharing
+# Lab 104B: https://docs.google.com/spreadsheets/d/1gVGxDOPrlk3jvKtI5raezOj17WF1IhJaxt3gs1KR4Ds/edit?usp=sharing
+# Lab 105B: https://docs.google.com/spreadsheets/d/1sYpg1MkTcIR2ViHdQZrtVJ7_oR5OUwVJT-f_LwmBjQo/edit?usp=sharing
+# Lab 106B: https://docs.google.com/spreadsheets/d/1TMpkxrOXvfp7-u6KxnQiIRFvUuIdrFDNDl6hHwSqtS0/edit?usp=sharing
+# Lab 107B: https://docs.google.com/spreadsheets/d/15V6qR37-pPW0t3DAAuH_ElyqToTBgtFp0DYLu3iR0Og/edit?usp=sharing
+# Lab 108B: https://docs.google.com/spreadsheets/d/1TFQYLia1HG1GA6hPGy1WwoFYS-qav5fvcbshwrqD7zs/edit?usp=sharing
+# Lab 109B: https://docs.google.com/spreadsheets/d/1Axn4186utxbIUGcKu_SNp_u2pd7rtTPNsSlv4HTmvps/edit?usp=sharing
+# Lab 110B: https://docs.google.com/spreadsheets/d/1pwv2WJbpy_oZZT7D5TN0Gb8-vh-sFx5SkK60Fkr51AI/edit?usp=sharing
+
+sheets <- gs_ls()
+shared_gs <- gs_title(x = "PH142 Lab Section 1XXB") # replace XX with your lab number
+our_sheet_ss_10 <- shared_gs %>% gs_read("n = 10")
+
+our_sheet_ss_10 <- our_sheet_ss_10 %>% 
+  mutate(missed = ((lower_CI > 70) & (upper_CI > 70)) | ((lower_CI < 70) & (upper_CI < 70)))
+
+CI_plot_n10 <- ggplot(our_sheet_ss_10, aes(x = sample_mean_heights, y = sample_id)) +
+  geom_point() + 
+  geom_segment(aes(x = lower_CI, xend = upper_CI, yend = sample_id)) +
+  geom_vline(xintercept = 70, col = "blue") +
+  labs(y = "Sample", x = "Sample mean", title = "95% CIs, when sample size = 10") + 
+  scale_x_continuous(limits = c(65, 75))
+
+CI_plot_n10
+```
+
+```{r sample-size-50}
+our_sheet_ss_50 <- shared_gs %>% gs_read("n = 50")
+
+our_sheet_ss_50 <- our_sheet_ss_50 %>% 
+  mutate(missed = ((lower_CI > 70) & (upper_CI > 70)) | ((lower_CI < 70) & (upper_CI < 70)))
+
+CI_plot_n50 <- ggplot(our_sheet_ss_50, aes(x = sample_mean_heights, y = sample_id)) +
+  geom_point() + 
+  geom_segment(aes(x = lower_CI, xend = upper_CI, yend = sample_id)) +
+  geom_vline(xintercept = 70, col = "blue") +
+  labs(y = "Sample", x = "Sample mean", title = "95% CIs, when sample size = 50") + 
+  scale_x_continuous(limits = c(65, 75))
+
+CI_plot_n50
+```
+
+```{r samples-size-500}
+our_sheet_ss_500 <- shared_gs %>% gs_read("n = 500")
+
+our_sheet_ss_500 <- our_sheet_ss_500 %>% 
+  mutate(missed = ((lower_CI > 70) & (upper_CI > 70)) | ((lower_CI < 70) & (upper_CI < 70)))
+
+CI_plot_n500 <- ggplot(our_sheet_ss_500, aes(x = sample_mean_heights, y = sample_id)) +
+  geom_point() + 
+  geom_segment(aes(x = lower_CI, xend = upper_CI, yend = sample_id)) +
+  geom_vline(xintercept = 70, col = "blue") +
+  labs(y = "Sample", x = "Sample mean", title = "95% CIs, when sample size = 500") + 
+  scale_x_continuous(limits = c(65, 75))
+
+CI_plot_n500
+```
+
+Run this code if you want to simulate on your own many samples:
+
+```{r}
+sample_size <- 10 
+
+calc_sample_stats <- function(df) {
+  df %>% 
+    summarize(mean_heights = mean(height)) %>%
+    mutate(lower_CI = mean_heights - 1.96 * known_pop_sd / sqrt(sample_size),
+           upper_CI = mean_heights + 1.96 * known_pop_sd / sqrt(sample_size))
+  
+}
+
+many.sample.stats <- replicate(1000, sample_n(alameda_pop, sample_size), simplify = F) %>%
+  lapply(., calc_sample_stats) %>%
+  bind_rows() %>%
+  mutate(sample.id = 1:n())
+
+many.sample.stats <- many.sample.stats %>% mutate(missed = ((lower_CI > 70) & (upper_CI > 70)) | 
+                                                    ((lower_CI < 70) & (upper_CI < 70)))
+
+ggplot(many.sample.stats %>% filter(sample.id < 100), aes(x = mean_heights, y = sample.id)) + 
+  geom_point(aes(col = missed)) + 
+  geom_segment(aes(x = lower_CI, xend = upper_CI, yend = sample.id, col = missed)) +
+  geom_vline(xintercept = 70, col = "blue") +
+  labs(y = "Sample", x = "Sample mean", title = paste0("95% CIs, when sample size = ", sample_size)) + 
+  scale_x_continuous(limits = c(65, 75))
+```
+
