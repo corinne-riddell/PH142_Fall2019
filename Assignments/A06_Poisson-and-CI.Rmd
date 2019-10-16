@@ -1,0 +1,182 @@
+---
+title: "Assignment 6"
+author: "Your name and student ID"
+date: "Today's date"
+output:
+  pdf_document: default
+---
+
+* Due date: October 23, 5:00pm (make sure to provide enough time for Gradescope
+submission to be uploaded if you include large image files).
+* Late penalty: 50% late penalty if submitted within 24 hours of due date, no 
+marks for assignments submitted thereafter.
+* Please do not change the format of the assignment. This makes grading less efficient.
+* Submission process: Please submit a PDF of your assignment to Gradescope. You 
+must tell Gradescope which questions are on which pages. If you can't see it 
+properly on Gradescope, open the PDF in a PDF viewer at the same time so you 
+can make the selections accurately. Not selecting, or selecting inaccurately
+will result in points being deducted since this makes grading much less efficient.
+
+Helpful hint:
+
+- Knit your file early and often to minimize knitting errors! If you copy and 
+paste code, you are bound to get an error that is hard to diagnose. Hand-writing 
+code is the way to smooth knitting! We recommend knitting your file each time 
+after you write a few sentences/add a new code chunk, so you can detect the 
+source of knitting errors more easily.
+
+\newpage
+--------------------------------------------------------------------------------
+
+1. [9 points total] Oklahoma is not historically known for experiencing earthquakes. Up until 
+2008, Oklahoma experienced a constant rate of about 1.5 perceptible earthquakes
+per year on average.
+
+a) [1 point] Assuming that earthquakes are random and independent, with a 
+constant rate of 1.5 per year, the count of perceptible earthquakes per year in 
+Oklahoma should have a Poisson distribution with mean 1.5. What is the standard 
+deviation of the number of earthquakes per year?
+
+Replace with answer.
+
+b) [1 point] Making the same assumptions as in part (a), use one or two R functions to 
+compute and display the probability of seeing less than two earthquakes per year. 
+
+```{r}
+#write your code here. 
+```
+
+c) [2 points] Do the same calculation as above, this time using only a hand 
+calculator. Show your work and round your final percentage to two decimal places.
+
+Replace with your answer.
+
+d) [1 point] In 2013, Oklahoma experienced 109 perceptible earthquakes (an 
+average of two per week). Assuming the same model as above, write an equation to
+show how the chance of experience 109 earthquakes or more can be written as a 
+function of the probability at or below some $k$. 
+
+Replace with your answer.
+
+e) [2 points] Use R, calculate and display the probability of observing 109 perceptible 
+earthquakes or more. Write a sentence describing the chance of seeing such an 
+event assuming the specified Poisson distribution (i.e., is it rare or common?)
+
+```{r}
+#write your code here. 
+```
+
+f) [2 points] Based on your answer in question (e), would you conclude that the 
+mean number of perceptible earthquakes has increased? Why or why not? Would 
+knowing that the number of perceptible earthquakes was 585 in 2014 support your 
+conclusion?
+
+Replace with your answer.
+
+\newpage
+
+--------------------------------------------------------------------------------
+
+2. [5 points total] To track epidemics, the Center for Disease Control and Prevention requires 
+physicians to report all cases of important transmissible diseases. In 2014,
+a total of 350,062 cases of gonorrhea were officially reported, 53% of which 
+were individuals in their 20s. Assume this 53% stays the same every year.
+Researchers plan to take a simple random sample of 400 diagnosed cases of 
+gonorrhea to study the risk factors associated with the disease. Call $\hat{p}$
+the proportion of cases in the sample corresponding to individuals in their 20s. 
+
+a) [2 points] What are the mean and standard deviation of the sampling 
+distribution of $\hat{p}$ in random samples of size 400?
+
+Replace with your answer.
+
+b) [3 points] Describe the conditions required for the sampling distribution of $\hat{p}$ 
+to be Normally distributed. Use the numbers provided in the question to check if
+the conditions are likely met. 
+
+Replace with your answer
+
+\newpage
+--------------------------------------------------------------------------------
+
+3. [4 points total] Read [this short article](https://www.nytimes.com/2016/10/06/upshot/when-you-hear-the-margin-of-error-is-plus-or-minus-3-percent-think-7-instead.html)
+in the New York Times Upshot from 2016.
+
+a) [2 points] Explain sampling variation, in the context of this article. Does the
+3 percentage point margin of error account for sampling variation?
+
+Replace with your answer.
+
+b) [1 point] The authors provides several reasons why the true margin of error is 
+larger than three percent. Describe one of the primary reasons provided in 1-2 
+sentences.
+
+Replace with your answer.
+
+c) [1 point] Based on the information in article, if we're doing a study in public
+health, choose the answer that is most correct:
+
+    (a) The confidence interval accounts for random error only. If a study suffers
+    from other sources of bias (i.e., confounding, or mismeasurement) the CI will
+    not account for this limitation.
+    (b) Increasing the sample size will reduce the chance of other sources of bias
+    (i.e., confounding, or mismeasurement), which is why a larger sample is better.
+    (c) both (a) and (b)
+    (d) neither (a) or (b)
+
+Delete all but answer choice here: a  b  c  d
+
+\newpage
+--------------------------------------------------------------------------------
+
+4. [11 points total] Deer mice are small rodents native in North America. Their adult body lengths
+(excluding tail) are known to vary approximately Normally, with mean $\mu=86$ mm
+and standard deviation $\sigma=8$ mm. It is suspected that depending on their 
+environment, deer mice may adapt and deviate from these usual lengths. A random 
+sample of $n=14$ deer mice in a rich forest habitat gives an average body length 
+of $\bar{x}=91.1$ mm. Assume that the standard deviation $\sigma$ of all deer 
+mice in this area is 8 mm. 
+
+a) [2 points] Calculate a 99% confidence interval based on this information (you can use R 
+as a calculator to perform the calculation, or use a hand calculator. Either way,
+show your work). Interpret the confidence interval. Round your final values to 
+two decimal places.
+
+```{r CI99}
+#write your code here (none needed if you use hand calculator)
+```
+
+b) [2 points] Suppose deer mice researchers thought your CI was too wide to be 
+useful. Given that you cannot change the standard deviation, what two things 
+could you do to provide a narrower confidence interval? 
+
+1. Your first answer here.
+2. Second answer here.
+
+c) [3 points] You decide to create a 95% confidence interval, rather than a 99% 
+confidence interval. Perform this calculation below. If perfoming the calculation by hand, 
+show your work. Based on this 95% CI, is there evidence against the hypothesis 
+$H_0$ that these mice have a significantly different mean length compared to the 
+population described in the first part of the question? 
+Without performing a calculation, what amounts do you know the p-value to be bounded 
+between for a two-sided hypothesis test of $H_0$? 
+
+Hint: 
+Use information from this question and from part (a).
+
+Replace with your answer.
+
+```{r CI95}
+#write your code here (none needed if you use hand calculator)
+```
+
+d) [4 points] Perform a z-test with the two-sided alternative hypothesis that 
+$H_a: \mu \neq 86$ (and null hypothesis $H_0: \mu = 86$). Be sure to write out 
+the null and alternative hypotheses, the z test statistic, the p-value and an
+interpretation of the p-value.
+
+Replace with your answer.
+
+```{r ztest}
+#write code here (none needed if you use a hand calculator)
+```
