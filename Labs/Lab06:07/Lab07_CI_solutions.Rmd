@@ -1,0 +1,160 @@
+---
+title: 'Solutions Lab 6: Confidence intervals for the mean'
+output: pdf_document
+---
+
+# Introduction 
+
+This is a collaborative assignment that the entire lab section will conduct 
+together. We will all contribute to a central data source (a Google sheet) and 
+the GSI will summarize the results as the class progresses.  The purpose is to
+develop a very concrete idea of confidence intervals by watching their distributions, and to see their performance LIVE!
+
+# The underlying population
+
+Similar to lab 5, suppose you had a data frame containing the **entire population** 
+of all residents of Alameda County. You have data on four variables:
+
+1.  Born either out (=1) versus in (=0) the county.
+2.  Number of siblings (integer)
+3.  Number of visits to the hospital last year
+4.  Each individual's height (inches)
+
+1. Read in the data and assign it to the name `alameda_pop`. Calculate the true 
+(population) mean of the variable `height`, and the population standard deviation.
+Make a histogram of `height` and comment its distribution. Use ggplot() to quickly
+make a ggplot. Does it look Normally distributed?
+
+```{r readin, message = F, warning = F}
+# read in the data
+library(tidyverse)
+alameda_pop <- read_csv("../Data/L05_Alameda.csv")
+head(alameda_pop)
+
+# compute the true population mean of each variable
+alameda_pop %>% summarise(pop_mean_height = mean(height),
+                          pop_sd_height = sd(height)) 
+
+ggplot(alameda_pop, aes(x = height)) + geom_histogram()
+
+ggplot(alameda_pop, aes(sample = height)) + geom_qq() + geom_qq_line()
+```
+
+Solution: These data are almost exactly Normally distributed because the qqplot 
+follows a straight line. The true population mean is 70 inches and the population
+standard deviation is 2.79 inches.
+
+Suppose that you know the population standard deviation. It is what you calculated
+in the previous code chunk. Use the following code chunk to save its value. Replace
+the word `NULL` with your calculation of the population standard deviation.:
+
+```{r save-known-pop-sd}
+#solution
+known_pop_sd <- 2.79
+```
+
+Now, suppose you *do not know* the population mean, but wanted to estimate it 
+based on a sample. In this lab, we actually know the true value because we 
+calculated it above. This way, we can see how well any one sample does at estimating
+the population mean and see how often the confidence intervals contain the mean
+across several repeated samples.
+
+### Calculating the CI and looking at its performance
+
+We are now going to compute (and enter into our master google sheet) 95%
+confidence intervals (CI) for sampling means of different sizes. For this lab we:
+
+- Have a variable with an underlying Normal distribution
+- Will take simple random samples (SRS) from this distribution
+- Know the value of the population mean (from your calculation in the first code
+chunk)
+
+Thus, we satisfy the three conditions discussed in Wednesday's lecture for calculating
+a confidence interval when the underlying SD is known.
+
+Recall the format for the 95% confidence interval in this setting (Hover with 
+your mouse within the double-dollar signs to see the formula or knit the file to 
+read them easily):
+
+$$\bar{x} \pm 1.96 \times\frac{\sigma}{\sqrt{n}}$$
+Where:
+
+- The sample mean is the estimated mean, based on your sample
+- $\sigma$ is the known standard deviation `known_pop_sd`, that you saved earlier for the distribution of `height`
+- $\sigma/\sqrt{n}$ is the standard error of the sampling distribution for $\bar{x}$
+- 1.96 is the critical value for a 95% CI.
+
+Like last lab, each student will take a few samples from the distribution. This
+time, you will calculate the mean of your sampled heights and its confidence
+interval using the above formula. We will then record this information into the 
+google sheet and plot all the CIs when we have at least 20 of them.
+
+The GSIs will provide you the link to the communal Google sheet. The columns in 
+the sheets are `sample_mean_heights` `lower_CI` `upper_CI` `sample_size` `student`.
+
+### Your task
+
+1. Randomly generate 3 simple random samples of size $n = 10$ from the population.
+Calculate the average number of siblings for each of your samples. We wrote code
+to start you off, which you can simply copy and paste 3 times to generate three 
+randomly-drawn samples and their sample means.
+
+```{r sample-size-10}
+sample_size <- 10
+critical_value <- 1.96
+
+size_10 <- sample_n(alameda_pop, sample_size, replace = FALSE)
+size_10 %>% summarise(mean_heights = mean(height)) %>%
+mutate(lower_CI = mean_heights - 1.96 * known_pop_sd / sqrt(sample_size),
+       upper_CI = mean_heights + 1.96 * known_pop_sd / sqrt(sample_size))
+
+size_10 <- sample_n(alameda_pop, sample_size, replace = FALSE)
+size_10 %>% summarise(mean_heights = mean(height)) %>%
+mutate(lower_CI = mean_heights - 1.96 * known_pop_sd / sqrt(sample_size),
+       upper_CI = mean_heights + 1.96 * known_pop_sd / sqrt(sample_size))
+
+size_10 <- sample_n(alameda_pop, sample_size, replace = FALSE)
+size_10 %>% summarise(mean_heights = mean(height)) %>%
+mutate(lower_CI = mean_heights - 1.96 * known_pop_sd / sqrt(sample_size),
+       upper_CI = mean_heights + 1.96 * known_pop_sd / sqrt(sample_size))
+```
+
+Navigate to the google sheet for your lab and add the mean and its CI for your
+three samples. Once this is done enough times, the GSI can make a plot of the
+CIs and see how many contain the true value for the mean. Based on this plot:
+
+- What proportion of the confidence intervals contain the mean? 
+
+2. Repeat for a sample size of $n=50$. In the code chunk below, generalize your
+code from the previous chunk to create three samples, this time of size 50:
+
+```{r sample-size-50}
+sample_size <- 50
+critical_value <- 1.96
+
+size_50 <- sample_n(alameda_pop, sample_size, replace = FALSE)
+size_50 %>% summarise(mean_heights = mean(height)) %>%
+mutate(lower_CI = mean_heights - 1.96 * known_pop_sd / sqrt(sample_size),
+       upper_CI = mean_heights + 1.96 * known_pop_sd / sqrt(sample_size))
+
+size_50 <- sample_n(alameda_pop, sample_size, replace = FALSE)
+size_50 %>% summarise(mean_heights = mean(height)) %>%
+mutate(lower_CI = mean_heights - 1.96 * known_pop_sd / sqrt(sample_size),
+       upper_CI = mean_heights + 1.96 * known_pop_sd / sqrt(sample_size))
+
+size_50 <- sample_n(alameda_pop, sample_size, replace = FALSE)
+size_50 %>% summarise(mean_heights = mean(height)) %>%
+mutate(lower_CI = mean_heights - 1.96 * known_pop_sd / sqrt(sample_size),
+       upper_CI = mean_heights + 1.96 * known_pop_sd / sqrt(sample_size))
+```
+
+After you calculated your 3 sample means, navigate to the Google sheet from 
+before, but switch to the sheet with $n=50$ (you can switch tabs in the bottom left).
+Add your data for $n=50$.
+
+Once this is done, the GSI will plot these data, now with $n=50$
+
+- What proportion of the confidence intervals contain the mean?
+- How do the average widths of the CI's compare for $n=50$ versus $n=10$?
+- What would happen to the confidence intervals if $n=500$?
+
