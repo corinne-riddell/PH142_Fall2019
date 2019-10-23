@@ -1,0 +1,330 @@
+---
+title: "Assignment 3"
+author: "Solutions"
+date: "Today's date"
+output:
+  pdf_document: default
+---
+
+* Due date: Friday, September 20 5:00pm.
+* Late penalty: 50% late penalty if submitted within 24 hours of due date, no 
+marks for assignments submitted thereafter.
+* This assignment is marked out of 47. Marks are indicated for each 
+question. There are 19 questions total.
+* Submission process: Please submit your assignment *directly* to 
+Gradescope (see the last page for more details). Do not remove any `\newpage` 
+tags from this file.
+
+Helpful hints:
+
+- Every function you need to use was taught during lecture! So you may need to 
+revisit the lecture code to help you along by opening the relevant files on data 
+hub. Alternatively, you may wish to view the code in the condensed PDFs posted 
+on bCourses (under Files > Lectures). Good luck!
+
+- Knit your file early and often to minimize knitting errors! If you copy and 
+paste code for the slides, you are bound to get an error that is hard to 
+diagnose. Typing out the code is the way to smooth knitting! We recommend 
+knitting your file each time after you write a few sentences/add a new code 
+chunk, so you can detect the source of knitting errors more easily. This will 
+save you and the GSIs from frustration!
+
+- If your code runs off the page of the knitted PDF then you will LOSE POINTS! To
+avoid this, have a look at your knitted PDF and ensure all the code fits in the 
+file. When it doesn't, go back to your .Rmd file and add spaces (new lines) using
+the return or enter key so that the code runs onto the next line.
+ 
+--------------------------------------------------------------------------------
+
+```{r load-libraries, message=F}
+library(readr)
+library(dplyr)
+library(ggplot2)
+library(broom)
+library(forcats)
+```
+
+### Predicting insurance charges by age and BMI 
+
+**Problem**: Medical insurance charges can vary according to the complexity of a 
+procedure or condition that requires medical treatment. You are tasked with 
+determining how these charges are associated with age, for patients who have a 
+body mass index (bmi) in the "normal" range (bmi between 16 and 25) who are 
+smokers.
+
+**Plan**: You have chosen to use tools to examine relationships between two 
+variables to address the problem. In particular, scatter plots and simple linear
+regression.
+
+**Data**: You have access to the dataset `A03-Insure.csv`, a claims dataset from
+an insurance provider. It is in the data folder.
+
+**Analysis and Conclusion**: In this assignment you will perform the analysis 
+and make a conclusion to help answer the problem statement.
+
+\newpage
+
+**1. [1 mark] Please type one line of code below to import these data into R. Assign the data to `insure_data`. Execute the code by hitting the green arrow and ensure the data set has been saved by looking at the environment tab and viewing the data set by clicking the table icon to the right of its name.**
+
+```{r load-insure-data}
+insure_data <- read_csv("../Data/A03-Insure.csv")
+```
+
+\newpage
+
+**2. [2 marks] Write the code for four functions to get to know your dataset. Execute these functions line by line so you can look at their output, and examine these data.**
+
+```{r initial looks}
+dim(insure_data)
+names(insure_data)
+str(insure_data)
+head(insure_data)
+```
+
+\newpage
+
+**3.a) [1 mark] How many individuals are in the dataset?:**
+1338
+
+**3.b) [1 mark] How many nominal variables are in the dataset? What are they?:**
+3; sex, smoker, region
+
+**3.c) [1 mark] How many ordinal variables are in the dataset? What are they?:**
+0
+
+**3.d) [1 mark] How many continuous variables are in the dataset? What are they?:**
+Solution 1 (preferred): 3; bmi, charges, age
+Solution 2: 3; bmi, charges
+
+**3.e) [1 mark] How many discrete variables are in the dataset? What are they?:**
+Solution 1 (preferred): 1; children
+Solution 2: 2; children, age
+
+\newpage
+
+**Run the following code by removing the "#" symbol in front of each of the six lines and executing the code chunk. Remind yourself what the `mutate()` function does in general, and notice that a new function `case_when()` is also being used.**
+
+```{r mutate-case-when}
+insure_data <- insure_data %>% 
+  mutate(bmi_cat = case_when(bmi < 16 ~ "Underweight",
+                             bmi >= 16 & bmi < 25 ~ "Normal", 
+                             bmi >= 25 & bmi < 30 ~ "Overweight",
+                             bmi >= 30 ~ "Obese")
+                  )
+```
+
+**4.a) [1 mark] What did the above code achieve?:**
+
+The above code created a new variable called `bmi_cat` that created four categories
+of BMI: underweight, normal, overweight, and obese, based on the continuous variable
+BMI.
+
+**4.b) [1 mark] What type of variable is `bmi_cat`:**
+
+Ordinal
+
+\newpage
+
+**5.a) [1 mark] Read the Problem statement proposed at the beginning of this exercise. Who belongs to the population of interest?:** 
+
+Smokers of normal BMI
+
+**5.b) [1 mark] Using a dplyr function make a new dataset called `insure_subset` containing the population of interest**
+
+```{r dplyr-the-data}
+insure_subset <- insure_data %>% filter(smoker == "yes" & bmi_cat == "Normal")
+```
+
+\newpage
+
+**6. [3 marks] Make a scatter plot of the relationship between `age` and insurance `charges` for the population of interest. Give your plot an informative title.**
+
+```{r scatter-plot}
+ggplot(insure_subset, aes(x = age, y = charges)) + 
+  geom_point() +
+  labs(title = "The relationship between age and insurance charges among smokers of normal BMI")
+```
+
+\newpage
+
+**7.a) [2 marks] Run a linear regression model on the relationship between `age` and `charges`. Think about which variable is explanatory (X) and which is response (Y). Assign the regression model to the name `insure_mod`. Then type `tidy(insure_mod)` below the model's code and execute both lines.**
+
+```{r regression-mod}
+insure_mod <- lm(formula = charges ~ age, data = insure_subset)
+tidy(insure_mod)
+```
+
+**7.b) [1 mark] Interpret the slope parameter:**
+
+For every year increase in age, medical charges go up by $246.14.
+
+**7.c) [1 mark] Interpret the intercept parameter:**
+
+The model predicts that the insurance charged would be $10,656.14 for a person of aged 0.
+
+**7.d) [1 mark] Does the intercept make sense in this context?:**
+
+No because being 0 years old is non sensical. Further, the minimum age in the dataset is 18, so extrapolation to 0 is not supported by the data. (student can say either of these items or both.)
+
+\newpage
+
+**7.e) [1 mark] Add the line of best fit to your scatterplot by copying and pasting the plot's code from Question 6 into the chunk below and adding a `geom` that can be used to add a regression line:**
+
+```{r scatter-plot-with-line}
+ggplot(insure_subset, aes(x = age, y = charges)) + 
+  geom_point() +
+  labs(title = "The relationship between age and insurance charges among smokers of normal BMI") +
+  geom_abline(intercept = 10656.1, slope = 246.1)
+```
+
+\newpage
+
+**8. [2 marks] What do you notice about the fit of the line in terms of the proportion of points above vs. below the line. Why do you think that is?:**
+
+The line seems high. There is a large proportion of points below the line. 
+
+\newpage
+
+**Run the following `filter()` function by removing the "#" symbol in front of the two lines of code and executing the code chunk.**
+
+```{r filter-smalller}
+insure_smaller_subset <- insure_subset %>% 
+  filter(charges < 30000 & ! (charges > 25000 & age == 20))
+```
+
+**9. [2 marks] How many individuals were removed? Who were they?:**
+
+Three individuals were removed. They were the "y outliers", the two people with the highest charges in the dataset and a third person who was 20 years old with a charge > $25,000.
+
+\newpage
+
+**10. [2 marks] Run a regression model on `insure_smaller_subset` between `charges` and `age`. Assign it to an informative name and look at the output using the `tidy()` function, as was done with the previous linear model.**
+
+```{r second-regression-mod}
+insure_mod_no_outliers <- lm(formula = charges ~ age, data = insure_smaller_subset)
+tidy(insure_mod_no_outliers)
+```
+
+\newpage
+
+**11. [2 marks] Add the new regression line to your ggplot. Keep the older regression line on the plot for comparison. To distinguish them, change the color, line type, or line width of the newly-added line.**
+
+```{r scatter-two-lines}
+ggplot(insure_subset, aes(x = age, y = charges)) + 
+  geom_point() +
+  labs(title = "The relationship between age and insurance charges among smokers of normal BMI") +
+  geom_abline(intercept = 10656.1, slope = 246.1, lty = 2) + 
+  geom_abline(intercept = 9144.1, slope = 266.9)
+```
+
+\newpage
+
+**12. [2 marks] Calculate r-squared for both linear models using a function learned in class (Hint: Chapter 4 lecture).**
+
+```{r rsquared}
+#students could write:
+glance(insure_mod) %>% pull(r.squared)
+glance(insure_mod_no_outliers) %>% pull(r.squared)
+
+#or:
+glance(insure_mod)
+glance(insure_mod_no_outliers)
+
+#or
+glance(insure_mod) %>% select(r.squared)
+glance(insure_mod_no_outliers) %>% select(r.squared)
+```
+
+\newpage
+
+**13. [4 marks] Calculate correlation between `age` and `charges` using the subset (`insure_subset`) and the even smaller dataset (`insure_smaller_subset`). Also calculate correlation squared for both data frames. What is the relationship between the correlation and r-squared values that you calculated in the previous question?**
+
+```{r correlations}
+insure_subset %>% summarize(corr = cor(age, charges), cor_sq = corr^2)
+insure_smaller_subset %>% summarize(corr = cor(age, charges), cor_sq = corr^2)
+```
+
+The square of correlation is equal to r-squared. 
+
+\newpage
+
+**PART B: Your supervisor asks you to extend your analysis to consider other smokers with BMIs classified as overweight or obese. In particular, she wanted to know if the relationship between age and medical charges is different for different BMI groups. You can use data visualization coupled with your skills in linear regression to help answer this question.**
+
+**14. [1 mark] Make a new dataset called `insure_sub_smoke` that includes smokers of any BMI.**
+
+```{r dplyr-the-data-smokers}
+insure_subset_smokers <- insure_data %>% filter(smoker == "yes") 
+```
+
+\newpage
+
+**15. [1 mark] Make a scatter plot that examines the relationship between `age` and `charges` separately for normal, overweight, and obese individuals. A `facet_` command may help you.**
+
+```{r ggplot-by-bmi}
+ggplot(insure_subset_smokers, aes(x = age, y = charges)) + 
+  geom_point() + 
+  facet_wrap(~ bmi_cat)
+```
+
+**Is there something out of order with your plot you just made? The issue is that the plot is automatically displayed by listing the BMI categories alphabetically. Run the following code by removing the "#" symbol in front of the two lines of code and executing the code chunks**: 
+
+```{r fct-relevel}
+insure_subset_smokers <- insure_subset_smokers %>% 
+  mutate(bmi_cat_ordered = forcats::fct_relevel(bmi_cat, "Normal", "Overweight", "Obese"))
+```
+
+\newpage
+
+**16. [1 mark] Re-run your plot code, but this time using `bmi_cat_ordered`.**
+
+```{r ggplot-by-bmi-2}
+ggplot(insure_subset_smokers, aes(x = age, y = charges)) + 
+  geom_point() + 
+  facet_wrap(~ bmi_cat_ordered)
+```
+
+\newpage
+
+**17. [3 marks] Run a separate linear model for each BMI group. To do this, you will need to subset your data into the three groups of interest first. Call your models `normal_mod`, `overweight_mod`, `obese_mod`. Use the `tidy()` function to display the output from each model.**
+
+```{r more-models-more-outputs}
+insure_smokers_normal <- insure_subset_smokers %>% filter(bmi_cat == "Normal")
+insure_smokers_overweight <- insure_subset_smokers %>% filter(bmi_cat == "Overweight")
+insure_smokers_obese <- insure_subset_smokers %>% filter(bmi_cat == "Obese")
+
+normal_mod <- lm(charges ~ age, data = insure_smokers_normal)
+overweight_mod <- lm(charges ~ age, data = insure_smokers_overweight)
+obese_mod <- lm(charges ~ age, data = insure_smokers_obese)
+
+tidy(normal_mod)
+tidy(overweight_mod)
+tidy(obese_mod)
+```
+
+\newpage
+
+**18. Use the models to predict medical charges for a 20-year old by weight category. You don't need an R function to make these predictions, just the output from the model. Show your work for each calculation and round to the nearest dollar.**
+
+**a) [1 mark] among normal BMI group:**
+10656.1 + 246.1*20 = $15578.1
+
+**b) [1 mark] among overweight BMI group:**
+12399.7 + 264.2*20 = $17683.7
+
+**c) [1 mark] among obese BMI group:**
+30558.1 + 281.2*20 = $36182.1
+
+\newpage
+
+**19. [3 marks] In three sentences maximum, (1) comment on the direction of the association, (2) comment on how much the slopes vary across the BMI groups, and (3) how much the prediction for a 20-year old varies.**
+
+There was a positive association between age and medical charges for normal, overweight, and obese individuals. The relationship was of similar magnitude for each BMI group, though the slope increased in magnitude for overweight and obese individuals, implying that a steeper relationship for overweight individuals, and even steeper for obese individuals vs. normal BMI individuals. For a given age, obese individuals had much higher charges than overweight and normal weight individuals.
+
+\newpage 
+
+**Submission** 
+
+Please submit your lab *directly* to Gradescope. You can do this by knitting 
+your file and downloading the PDF to your computer. Then navigate to 
+Gradescope.com to submit your assignment. Here is a tutorial if you need help: https://www.gradescope.com/get_started. Scroll down on that page to 
+"For students:submitting homework".
