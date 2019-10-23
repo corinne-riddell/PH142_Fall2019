@@ -1,0 +1,376 @@
+---
+title: "Assignment 2: Summarize global cesarean delivery rates and GDP across 137 countries"
+author: "Your name and student ID"
+date: "Today's date"
+output: pdf_document
+---
+
+* Due date: Friday, September 13 5:00pm.
+* Late penalty: 50% late penalty if submitted within 24 hours of due date, no 
+marks for assignments submitted thereafter.
+* This assignment is marked out of 27. Marks are indicated for each 
+question. There are 15 questions total.
+* Submission process: Unlike previous labs and assignments, please submit your 
+assignment *directly* to Gradescope. You can do this by knitting your file and 
+downloading the PDF to your computer. Then navigate to Gradescope.com to submit 
+your assignment. Here is a tutorial if you need help: https://www.gradescope.com/get_started. 
+Scroll down on that page to "For students:submitting homework".
+
+Helpful hints:
+
+- Every function you need to use was taught during lecture! So you may need to 
+revisit the lecture code to help you along by opening the relevant files on data 
+hub. Alternatively, you may wish to view the code in the condensed PDFs posted 
+on bCourses (under Files > Lectures). Good luck!
+
+- Knit your file early and often to minimize knitting errors! If you copy and 
+paste code for the slides, you are bound to get an error that is hard to 
+diagnose. Typing out the code is the way to smooth knitting! We recommend 
+knitting your file each time after you write a few sentences/add a new code 
+chunk, so you can detect the source of knitting errors more easily. This will 
+save you and the GSIs from frustration!
+
+- If your code runs off the page of the knitted PDF then you will LOSE POINTS! To
+avoid this, have a look at your knitted PDF and ensure all the code fits in the 
+file. When it doesn't, go back to your .Rmd file and add spaces (new lines) using
+the return or enter key so that the code runs onto the next line.
+ 
+--------------------------------------------------------------------------------
+\newpage
+
+# Summarizing global cesarean delivery rates and GDP across 137 countries
+
+### Introduction 
+
+Recall from this week's lab that we constructed bar charts and histograms to 
+explore a data set that looked at global rates of cesarean delivery and GDP. 
+If you need a refresher, you can view your knitted file from lab and remind 
+yourself what you found. 
+
+In this week's assignment, you will describe these distributions using numbers. 
+You will investigate the **mean** and **median** of the distribution of GDP. 
+You will also examine the distribution of cesarean delivery separately for 
+countries of varying income levels. Lastly, you will describe the **spread**
+of the distributions using **quartiles** and make a **box plot**. 
+
+Execute this code chunk to load the required libraries:
+```{r load-libraries}
+library(readr)
+library(dplyr)
+library(ggplot2)
+```
+
+Just like last time, read in the data that is stored as a .csv file and assign 
+it to an object called `CS_data`. We will also use dplyr's `mutate()` to create
+the new cesarean delivery variable that ranges between 0 and 100: 
+
+```{r read-in-the-data}
+CS_data <- read_csv("./Data/Cesarean.csv")
+
+# this code reorders the Factor variable `Income_Group` in the 
+# order specified in this function. This will affect the order the ggplot
+# panels are shown in question 8 when we use `facet_wrap()`.
+CS_data$Income_Group <- forcats::fct_relevel(CS_data$Income_Group, 
+                                            "Low income", "Lower middle income", 
+                                            "Upper middle income", "High income: nonOECD", 
+                                            "High income: OECD")
+
+CS_data_new <- CS_data %>% mutate(CS_rate_100 = CS_rate*100)
+```
+
+\newpage
+
+**1. [1.5 marks] Fill in the blanks indicated by "---" by saving the answer to each blank in the code chunk below:**
+
+Solution: The function `mutate()` takes the old variable called **CS_rate** and multiplies it
+by **100** to make a new variable called **CS_rate_100**.
+\newpage
+
+**Investigate what would have happened had we not assigned the data using `<-` to 
+`CS_data_new`? Re-run the code without the assignment and see what happens.**
+
+```{r no-assignment-example}
+rm(CS_data_new) #first, remove using rm() CS_data_new from the environment
+CS_data %>% mutate(CS_rate_100 = CS_rate*100) #re-run code without assignment
+names(CS_data)
+```
+
+Did `CS_rate_100` get added to the data set? No. You can tell by using 
+`head(CS_data)` to view the first few rows and notice that the variable hasn't 
+been added. This is because when we don't assign the output to anything, 
+it just prints it out for us to see. Nothing is saved. Because we are only making
+a small change, we can overwrite the original object (CS_data) by assigning the 
+transformed data to the same name. Otherwise, you would want to assign the 
+variable to a different name so you can keep two separate copies of the data set.
+
+```{r overwrite-original-data}
+CS_data <- CS_data %>% mutate(CS_rate_100 = CS_rate*100)
+```
+
+\newpage
+
+### GDP: Summarizing measures of centrality
+
+Recall your histogram of GDP from this week's lab:
+```{r histogram-GDP-2006}
+ggplot(data = CS_data, aes(x = GDP_2006)) +
+  geom_histogram(col = "white", fill = "sienna2", binwidth = 1000) + 
+  xlab("GDP in 2006") +
+  theme_minimal() 
+```
+\newpage
+
+**2. [1 mark] Describe the shape of this distribution. Is it "skewed left", "skewed right", "symmetric", or "bimodal"?**
+
+[1 mark] Solution: skewed right.
+\newpage
+
+**3. [1 mark] Based on your answer, will the mean be approximately the "same", "larger than", or "smaller than" the median?**
+
+[1 mark] Solution: Mean will be larger than the median.
+\newpage
+
+**4. [3 marks, not auto-marked] Describe, in words, how the mean and median are calculated:**
+
+Solution:
+[3 marks total]
+   - [1 mark]: Mean: add up all the measurement values and divide by their total observation count.
+   - [2 mark]: Median: First, order the measurements by their value. 
+   If the total observation count is an odd number, 
+   the middle observation is the median. If an even number, add the
+   two mid measurements values and divide by two to calculate the median.
+
+\newpage
+
+To calculate the mean and median in R, we can use the `summarize()` function 
+from the `dplyr` package. The `summarize()` function is used anytime we want to 
+take a variable and summarize something about it into one number, like it's mean 
+or median. Here is the code to summarize `GDP_2006`'s mean and print it out to 
+the screen. In the code, we name the mean `mean_GDP` and output the result to 
+the screen:
+
+```{r summarize-mean}
+GDP_summary <- CS_data %>% summarize(mean_GDP = mean(GDP_2006))
+GDP_summary
+```
+\newpage
+
+**5. [1 mark] Extend the above code to also summarize the median. Call the median 
+summary `median_GDP`. Assign this summary to `GDP_summary` (it will overwrite the 
+previous version):**
+
+```{r summarize-median}
+#solution [1 mark]
+GDP_summary <- CS_data %>% summarize(mean_GDP = mean(GDP_2006), 
+                                     median_GDP = median(GDP_2006))
+GDP_summary
+```
+\newpage
+
+**6. [2 marks, not auto-marked] `geom_vline()` can be used to add the mean and the median to the 
+histogram shown above. This `geom` adds a vertical line to the graph. You need 
+to specify where to add the line by passing it an "xintercept" argument. Remove 
+the comments (i.e., the three "#") from the code below and update the 
+`geom_vline()` code to plot lines at the mean and median by telling it the mean 
+and median estimates. The argument `lty=1` (standing for line type) will plot a 
+solid line and `lty=2` will plot a dashed line.**   
+
+```{r add-mean-med-plot}
+# Expected solution [2 marks, where 1 point given for each line at the correct spot.]
+ggplot(data = CS_data, aes(x = GDP_2006)) +
+  geom_histogram(col = "white", fill = "sienna2") + 
+  xlab("GDP in 2006") +
+  theme_minimal() +
+  geom_vline(aes(xintercept = 11790.67), lty=1) + 
+  geom_vline(aes(xintercept = 3351.305), lty=2) 
+```
+
+```{r alternative solutions, eval = F, echo = F}
+# Alternative solution ("base R" solution: students aren't expected to know this, 
+# but some may write this solution based on previous R training)
+ggplot(data = CS_data, aes(x = GDP_2006)) +
+  geom_histogram(col = "white", fill = "sienna2") + 
+  xlab("GDP in 2006") +
+  theme_minimal() +
+  geom_vline(aes(xintercept = GDP_summary$mean_GDP), lty=1) + 
+  geom_vline(aes(xintercept = GDP_summary$median_GDP), lty=2) 
+
+#Alternative solution ("tidyverse" solution, using dplyr's pull())
+ggplot(data = CS_data, aes(x = GDP_2006)) +
+  geom_histogram(col = "white", fill = "sienna2") + 
+  xlab("GDP in 2006") +
+  theme_minimal() +
+  geom_vline(aes(xintercept = GDP_summary %>% pull(mean_GDP)), lty=1) + 
+  geom_vline(aes(xintercept = GDP_summary %>% pull(median_GDP)), lty=2) 
+```
+\newpage
+
+### Summarizing the distribution of cesarean delivery
+
+Recall the distribution of cesarean delivery rates across countries:
+
+```{r CS-histogram}
+ggplot(data = CS_data, aes(x = CS_rate_100)) +
+  geom_histogram(binwidth = 4, col = "white", fill = "sienna2") + 
+  xlab("Cesarean delivery rate (%)") +
+  theme_minimal()
+```
+\newpage
+
+**7. [1 mark] Describe the shape of this distribution. Is it "skewed left",
+"skewed right", "symmetric", or "bimodal"?**
+
+Solution: [1 mark]: Bimodal. Students who say bimodal and right-skewed get the 
+mark. Students who say only skewed right lose a mark.
+\newpage
+
+**There appears to be multiple peaks which sometimes points to there being another
+variable that might explain the peaks. We can make a separate histogram for each
+income group using the `facet_wrap()` function.**
+
+**8. [1 mark, not auto-marked] Extend your ggplot code using the `facet_wrap()` statement to make a separate histogram for each level of the `Income_Group` variable:**
+
+```{r CS-histogram-by-income}
+#solution [1 mark for correct facet_wrap statement, facet_grid(. ~ Income_Group)
+# or facet_grid(Income_Group ~ .) is also fine.]
+ggplot(data = CS_data, aes(x = CS_rate_100)) +
+  geom_histogram(binwidth = 6, col = "white", fill = "sienna2") + 
+  xlab("Cesarean delivery rate (%)") +
+  theme_minimal() + 
+  facet_wrap(~ Income_Group)
+```
+\newpage
+
+**9. [2 marks, not auto-marked] Based on this plot and the previous one, describe why the data had two peaks**
+
+Solution: [2 marks, 1 point for discussing low/lower income, 1 point for 
+discussing higher income countries] Many of the low and lower-middle income 
+countries had CS rates < 10%, while the higher income counties have rates closer
+to 20%.
+\newpage
+
+**10. [1 mark, not auto-marked] Why might lower income countries have lower rates of cesarean delivery?**
+
+Solution: [1 mark for an answer that sounds reasonable, no marks if the answer 
+doesn't make sense or is obviously incorrect] Lower income countries have 
+reduced access to obstetrical care, especially surgical procedures, limiting the
+number of women who can receive cesarean deliveries.
+\newpage
+
+**11. [2 marks] Modify the previously used `dplyr` `summarize()` code (from 
+question 5) to calculate the mean and median of `CS_rate_100` using only one 
+`summarize()` command. Assign this summary to the name `CS_summary` and then 
+print the results by typing `CS_summary` so you can see the contents.**
+
+```{r calc-CS-mean-median}
+#solution [2 marks, 1 for each mean() and median() being calculated correctly]
+CS_summary <- CS_data %>% summarize(mean_CS = mean(CS_rate_100),
+                                    median_CS = median(CS_rate_100))
+
+CS_summary
+```
+\newpage
+
+**Measures of variation**
+
+**12. [2 marks] Use ggplot2 to make a boxplot of the distribution of `CS_rate_100`**
+
+```{r}
+#solution [2 marks: set the correct y aes and used geom_boxplot to render a box plot. 
+#Don't need to worry about the col, fill, or theme settings.]
+ggplot(data = CS_data, aes(y = CS_rate_100)) +
+  geom_boxplot(col = "black", fill = "sienna2") +
+  theme_minimal()
+```
+\newpage
+
+Recall that the box plot summarizes the distribution in five numbers: the minimum, 
+the first quartile (with 25% of the data below it), the median, the third quartile 
+(with 75% of the data below it), and the maximum. Each of these numbers has at 
+least one corresponding R function:
+
+| Number          | R function                                                   |
+|-----------------|--------------------------------------------------------------|
+| Minimum         | `min(variable)`                                              |
+| First quartile  | `quantile(variable, probs = 0.25)`                           |
+| Median          | `median(variable)` or `quantile(variable, probs = 0.5)`      |
+| Third quartile  | `quantile(variable, probs = 0.75)`                           |
+| Maximum         | `max(variable)`                                              |
+
+**13. [2.5 marks] Use a combination of `dplyr`'s `summarize` function and the 
+above functions to compute the five number summary of `CS_rate_100`. Assign the 
+summary to the name `five_num_summary`:**
+
+```{r five-number-summary}
+#solution [2.5 marks: 0.5 mark for each of min(), Q1()... calculated correctly]
+five_num_summary <- CS_data %>% summarize(
+  min = min(CS_rate_100),
+  Q1 = quantile(CS_rate_100, 0.25),
+  median = median(CS_rate_100),
+  Q3 = quantile(CS_rate_100, 0.75),
+  max = max(CS_rate_100)
+)
+
+five_num_summary
+```
+\newpage
+
+Double check that `geom_boxplot()` is making the box plot correctly. You can do 
+this by adding horizontal lines to the plot at each number in your five number 
+summary using `geom_hline()`. Because horizontal lines intercept the y-axis, 
+`geom_hline()` requires the `yintercept` argument that you can set to each number 
+in your summary. 
+
+**14. [2 marks, not auto-marked] The code below includes one horizontal line at the minimum shown in blue. Add 
+the rest of the lines:**
+
+```{r add-horizontal-lines-to-boxplot}
+#solution [2 marks, 0.5 mark for each 5.1, 15.6, 23.3, and 45.9 being added]
+ggplot(data = CS_data, aes(y = CS_rate_100)) +
+  geom_boxplot(col = "black", fill = "sienna2") +
+  theme_minimal() + 
+  geom_hline(aes(yintercept = 0.4), col = "blue") + 
+  geom_hline(aes(yintercept = 5.1), col = "blue") +
+  geom_hline(aes(yintercept = 15.6), col = "blue") +
+  geom_hline(aes(yintercept = 23.3), col = "blue") +
+  geom_hline(aes(yintercept = 45.9), col = "blue") 
+```
+\newpage
+
+**15. [4 marks] Compile the following code which adds two points to the CS_data, 
+makes a new dataset called `CS_data_plus_2`, and redraws the box plot. How did 
+the box plot change? Perform a calculation to justify why it changed. What are 
+the newly-added features on the plot called?**
+
+```{r add-points, fig.width = 5}
+out_data <- tibble::tribble(
+  ~Country_Name, ~CS_rate_100,
+  "Point 1", 90,
+  "Point 2", 60
+)
+
+CS_data_plus_2 <- dplyr::full_join(CS_data, out_data)
+
+ggplot(data = CS_data_plus_2, aes(y = CS_rate_100)) +
+  geom_boxplot(col = "black", fill = "sienna2") 
+```
+
+Solution:
+- [1 mark] There are two points above the top whisker on the revised box plot.
+- [2 marks for the calculation] These points must be larger than Q3 + 1.5*IQR.
+
+```{r calculations_new_IQR}
+five_num_summary_new <- CS_data_plus_2 %>% summarize(
+  min = min(CS_rate_100),
+  Q1 = quantile(CS_rate_100, 0.25),
+  median = median(CS_rate_100),
+  Q3 = quantile(CS_rate_100, 0.75),
+  max = max(CS_rate_100)
+)
+```
+    - The IQR = Q3-Q1 =`r five_num_summary_new$Q3` - `r five_num_summary_new$Q1` = `r five_num_summary_new$Q3 - five_num_summary_new$Q1`. 
+    - IQR times 1.5 = `r (five_num_summary_new$Q3 - five_num_summary_new$Q1) *1.5`
+    - Q3 + `r 1.5*(five_num_summary_new$Q3 - five_num_summary_new$Q1)` = upper bound = `r 1.5*(five_num_summary_new$Q3 - five_num_summary_new$Q1)+five_num_summary_new$Q3`
+    - Both 60 and 90 are larger than `r 1.5*(five_num_summary_new$Q3 - five_num_summary_new$Q1)+five_num_summary_new$Q3`, which is why they are suspected outliers.
+- [1 mark] The points are called suspected outliers (or outliers is fine).
+
