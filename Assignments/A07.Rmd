@@ -1,0 +1,179 @@
+---
+title: "Assignment 7"
+author: "Your name and student ID"
+date: "Today's date"
+output:
+  pdf_document: default
+---
+
+```{r, warning=F, message=F, echo=F}
+library(dplyr)
+library(ggplot2)
+```
+
+* Due date: November 1, 5:00 pm (make sure to provide enough time for Gradescope
+submission to be uploaded if you include large image files).
+* Late penalty: 50% late penalty if submitted within 24 hours of due date, no 
+marks for assignments submitted thereafter.
+* Submission process: Please submit a PDF of your assignment to Gradescope. You 
+must tell Gradescope which questions are on which pages. If you can't see it 
+properly on Gradescope, open the PDF in a PDF viewer at the same time so you 
+can make the selections accurately, others points will be deducted since this 
+makes grading much less efficient.
+
+Helpful hint:
+
+- Knit your file early and often to minimize knitting errors! If you copy and 
+paste code, you are bound to get an error that is hard to diagnose. Hand-writing 
+code is the way to smooth knitting! We recommend knitting your file each time 
+after you write a few sentences/add a new code chunk, so you can detect the 
+source of knitting errors more easily.
+ 
+--------------------------------------------------------------------------------
+
+\newpage
+
+**Question 1 [12 points total].** 
+
+In two wards for elderly patients in a local hospital, the following 
+levels of hemoglobin (grams per liter) were found for a simple random sample of
+patients from each ward.:
+
+Ward A: 
+```{r}
+ward_a <- c(12.2, 11.1, 14.0, 11.3, 10.8, 12.5, 12.2, 11.9, 13.6, 12.7, 13.4, 13.7)
+```
+
+Ward B: 
+```{r}
+ward_b <- c(11.9, 10.7, 12.3, 13.9, 11.1, 11.2, 13.3, 11.4, 12.0, 11.1)
+```
+
+1.a) [2 points] Make two box plots to compare the hemoglobin values for Ward A and Ward B, and display it.
+Overlay the boxplots with their raw data. Comment on the similarities/differences
+portrayed by the plots, keeping in mind that the sample size is relatively small
+for these two wards.
+
+```{r make-data-frame}
+hemoglobin <- data.frame(hemo_level = c(ward_a, ward_b), 
+                         ward = c(rep("Ward A", 12), rep("Ward B", 10)))
+```
+
+```{r make-box-plot}
+# Your code here.
+```
+
+Write your answer here.
+
+\newpage
+
+1.b) [2 points] What two assumptions do you need to make to use any of the t-procedures? 
+Because each ward has a rather small sample size (n < 12 for both), what two 
+characteristics of the data would you need to check for to ensure that the 
+t procedures can be applied?
+
+Write your answer here.
+
+\newpage
+
+1.c) [4 points] Using only `dplyr` and `*t` functions, create a 95% confidence interval 
+for the mean difference between Ward A and Ward B. You can do this by using `dplyr`
+to calculate the inputs required to calculate the 95% CI, and then plugging these
+values in on a separate line of code (or using your calculator). Use a degrees of
+freedom of 19.515 (You don't need to calculate the degrees of freedom, you can 
+use this value directly). Show your work and the result, and interpret the mean difference and its 95% CI.
+
+```{r}
+# Your code here.
+```
+
+Write your answer here.
+
+\newpage
+
+1.d) [4 points] Perform a two-sided t-test for the difference between the two samples, where
+the null hypothesis is that the underlying means are the same. Start by 
+writing down the null and alternate hypotheses, then calculate the test statistic
+(showing your work) and p-value. Continue to assume that the degrees of freedom
+is 19.515. Verify the p-value by running the t-test using R's built in function.
+Show the output from that test. Hint: to perform the t-test using R's built in 
+function, you need to pass the function an x and y argument, where x includes 
+that values for Ward A and Y includes the values for Ward B. `dplyr`'s `filter()`
+and `pull()` functions will be your friends.
+
+(Hypothesis) Write your answer here.
+
+```{r test statistics and p-value}
+# Your code here.
+```
+
+(Conclusion) Write your answer here.
+
+```{r t-test}
+# Your code here.
+```
+
+\newpage
+
+**Question 2 [7 points total]**
+
+The time to perform open heart surgery is normally distributed. Sixteen 
+patients (chosen as a simple random sample from a hospital) underwent open heart 
+surgery that took the following lengths of time (in minutes).
+
+```{r}
+op_time <- c(247.8648, 258.4343, 315.6787, 268.0563, 269.9372, 320.6821, 
+             280.5493, 225.3180, 243.8207, 251.5388, 304.9706, 277.3140, 
+             278.6247, 269.3418, 248.0131, 322.9812)
+surg_data <- data.frame(op_time)
+```
+
+a) [1 point] You wish to know if the mean operating time of open heart surgeries at this 
+hospital exceeds four hours. Set up appropriate hypotheses for investigating
+this issue.
+
+Write your answer here.
+
+\newpage
+
+b) [3 points] Test the hypotheses you formulated in part (a). Report the p-value. What are 
+your conclusions? (Do not use the `t.test` function for this question)
+
+```{r}
+# Your code here.
+```
+
+Write your answer here.
+
+\newpage
+
+c) [3 points] Construct a 95% CI on the mean operating time.
+
+Write your answer here.
+
+
+\newpage
+
+3. [1 point] Suppose you were testing the hypotheses $H_0: \mu_d = 0$ and $H_a: \mu_d \neq 0$
+in a paired design and obtain a p-value of 0.21. Which one of the following could
+be a possible 95% confidence interval for $\mu_d$?
+
+a. -2.30 to -0.70
+b. -1.20 to 0.90
+c. 1.50 to 3.80
+d. 4.50 to 6.90
+
+Write your answer here.
+
+\newpage
+
+4. [1 point] Suppose you were testing the hypotheses $H_0: \mu_d = 0$ and $H_a: \mu_d \neq 0$
+in a paired design and obtain a p-value of 0.02. Also suppose you computed confidence
+intervals for $\mu_d$. Based on the p-value which of the following are true?
+
+a. Both a 95% CI and a 99% CI will contain 0.
+b. A 95% CI will contain 0, but a 99% CI will not.
+c. A 95% CI will not contain 0, but a 99% CI will.
+d. Neither a 95% CI nor a 99% CI interval will contain 0. 
+
+Write your answer here.
