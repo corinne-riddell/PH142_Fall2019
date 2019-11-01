@@ -1,0 +1,233 @@
+---
+title: "Assignment 8"
+author: "Your name and student ID"
+date: "Today's date"
+output:
+  pdf_document: default
+---
+
+* Due date: November 8, 5:00pm (make sure to provide enough time for Gradescope
+submission to be uploaded if you include large image files).
+* Late penalty: 50% late penalty if submitted within 24 hours of due date, no 
+marks for assignments submitted thereafter.
+* Submission process: Please submit a PDF of your assignment to Gradescope. You 
+must tell Gradescope which questions are on which pages. If you can't see it 
+properly on Gradescope, open the PDF in a PDF viewer at the same time so you 
+can make the selections accurately, otherwise points will be deducted since this 
+makes grading much less efficient.
+
+Helpful hint:
+
+- Knit your file early and often to minimize knitting errors! If you copy and 
+paste code, you are bound to get an error that is hard to diagnose. Hand-writing 
+code is the way to smooth knitting! We recommend knitting your file each time 
+after you write a few sentences/add a new code chunk, so you can detect the 
+source of knitting errors more easily. This will save you and the GSIs from frustration!
+
+- If your code runs off the page of the knitted PDF then you will LOSE POINTS! To
+avoid this, have a look at your knitted PDF and ensure all the code fits in the 
+file. When it doesn't, go back to your .Rmd file and add spaces (new lines) using
+the return or enter key so that the code runs onto the next line.
+ 
+ \newpage
+
+Question 1 [3 points total]. You would like to conduct a survey of highschool students to determine
+the proportion who are current e-cigarettes users. Before you conduct your 
+survey, you need to determine how large of a sample size you need. Suppose that you would 
+like the **width** of the 95% confidence interval to be 5 percentage points.
+
+1.a) [1 point] Determine the most conservative sample size you would require. Recall that
+to do this, you need to use a $p^*$ of 0.5.
+
+Write your answer here.
+
+\newpage
+
+1.b) [1 point] You've seen a recent publication ([link](http://annals.org/aim/fullarticle/2698112/prevalence-distribution-e-cigarette-use-among-u-s-adults-behavioral))
+from the *Annals of Internal Medicine* that estimated that 9.2% of individuals 
+aged 18 to 24 years old are current e-cigarette users. Update your sample size
+estimate under the assumption that the true underlying parameter $p=0.092$. 
+
+Write your answer here.
+
+\newpage
+
+1.c) [1 point] The recent publication referenced in the previous question only looked at 
+adults (aged 18+), but observed that the rate of current use was inversely 
+related to age among the population they surveyed. Because of this finding
+would you suppose that the sample size estimated in part (b) is too low or too
+high?
+
+Write your answer here.
+
+\newpage
+
+Question 2 [12 points total]. Exclusive breastfeeding during the first six months 
+of life is recommended for optimal infant growth and development. Suppose that 
+you conducted a survey of randomly chosen women from California and found that 
+775 out of 5615 new mothers exclusively breastfed their infants.
+
+2.a) [4 points]. Perform all four of the methods discussed in lecture and during
+lab to create a 95% confidence interval for the proportion of infants 
+exclusively breast fed. Remember that two of these methods can be performed "by hand"
+and two using R functions (though you can use R as a calculate for all four 
+methods if you wish).
+
+```{r, message=FALSE, warning=FALSE}
+library(tidyverse)
+```
+
+```{r}
+#your code here.
+```
+
+Summarize your findings: 
+
+- 95% CI using _____ method: 
+- 95% CI using _____ method: 
+- 95% CI using _____ method: 
+- 95% CI using _____ method: 
+
+\newpage
+
+2.b) [3 points] Create a plot comparing the confidence intervals. Do the
+methods produce confidence intervals that are basically the same or very different?
+Why?
+
+Write your answer here.
+
+```{r}
+#your code here.
+```
+
+\newpage
+
+2.c) [1 point] Suppose that in 2010, the rate of exclusive breastfeeding in 
+California was known to be 18.6%. Based on the 95% CIs calculated in 2.b) is there
+evidence against the null hypothesis that the underlying rate is equal to 18.6% in 
+favor of the alternative that the rate is different from 18.6%?
+
+Write your answer here.
+
+\newpage
+
+2.d) [4 points] To confirm your answer to part c), perform a two-sided hypothesis
+test and interpret the p-value. 
+
+State the null and alternative hypotheses:
+
+Write your answer here.
+
+Calculate the test statistic:
+
+Write your answer here. You may or may not want to insert a code chunk.
+
+Calculate the p-value:
+
+```{r}
+#your code here.
+```
+
+Interpret the p-value:
+
+Write your answer here.
+
+\newpage
+
+Question 3 [2 points total]. The quadrivalent HPV vaccine was introduced to
+Canada in 2007, and was given to girls in Ontario, Canada who were enrolled in 
+grade 8 (13-14 year olds). Before 2007, no girls recieved the vaccine, while in 
+the 4 years after it was introduced nearly 40% of girls recieved the vaccine 
+each year. One concern that some people had was that the vaccine itself would 
+increase promiscuity if the girls felt a false sense of protection, which could 
+thereby increase the prevalence of other sexually transmitted
+infections (STIs) among vaccinated girls. A paper ([link](https://www.ncbi.nlm.nih.gov/pubmed/25487660))
+examines this question using an advanced method called the "regression discontinuity"
+design which harnesses the abrupt change in vaccination status across cohorts
+of girls to estimate the causal effect of vaccination against HPV on the 
+occurrence of other STIs.
+
+Read only the abstract of the paper, and don't worry about the 
+details because these are advanced methods. Note that the term "RD" is the difference
+in risk of STIs between girls exposed and unexposed to HPV vaccination. We can
+therefore think of this risk difference as the difference between two proportions.
+
+3.a) Interpret this result from the abstract: We identified 15 441 (5.9%) cases 
+of pregnancy and sexually transmitted infection and found no evidence that 
+vaccination increased the risk of this composite outcome: RD per 1000 
+girls -0.61 (95% confidence interval [CI] -10.71 to 9.49)
+
+[1 point] In particular, what does -0.61 estimate?
+
+Write your answer here.
+
+\newpage
+
+3.b) [1 point] The 95% confidence interval includes 0. What can you conclude about the
+p-value for a two-sided test of the difference between vaccinated and unvaccinated
+girls and their risk of sexually transmitted diseases?
+
+Write your answer here.
+
+\newpage
+
+Question 4 [7 points total]. An allergy to peanuts is increasingly comment in Western
+countries. A randomized controlled trial enrolled infants with a diagnosed peanut
+sensitivity. Infants were randomized to either avoid peanuts or consume them
+regularly until they reached age 5. At the end of the study 18 out of the 51 
+randomized to avoidance were allergic to peanuts compared to 5 out of the 47 
+randomized to consuming them regularly. 
+
+4.a) [1 point] Estimate the difference between the two proportions.
+
+Write your answer here. You can insert an R chunk to perform calculations if you
+wish.
+
+\newpage
+
+4.b) [1 point] Use the plus four method to find a 99% confidence interval for the difference
+between the two groups. 
+
+Write your answer here. You can insert an R chunk to perform calculations if you
+wish.
+
+\newpage
+
+4.c) [1 point] Why would it have been inappropriate to use the large sample method to create
+a 99% CI?
+
+Write your answer here.
+
+\newpage
+
+4.d) [4 points] Perform a two-sided hypothesis test for the difference between the groups. 
+Start by stating the null and alternative hypotheses, then calculate the test
+statistic, the p-value, and conclude with your interpretation of the p-value.
+
+Write your answer here.
+
+\newpage
+
+5. [1 point] Suppose you were testing the hypotheses $H_0: \mu_d = 0$ and $H_a: \mu_d \neq 0$
+in a paired design and obtain a p-value of 0.21. Which one of the following could
+be a possible 95% confidence interval for $\mu_d$?
+
+a. -2.30 to -0.70
+b. -1.20 to 0.90
+c. 1.50 to 3.80
+d. 4.50 to 6.90
+
+Write your answer here.
+
+\newpage
+
+6. [1 point] Suppose you were testing the hypotheses $H_0: \mu_d = 0$ and $H_a: \mu_d \neq 0$
+in a paired design and obtain a p-value of 0.02. Also suppose you computed confidence
+intervals for $\mu_d$. Based on the p-value which of the following are true?
+
+a. Both a 95% CI and a 99% CI will contain 0.
+b. A 95% CI will contain 0, but a 99% CI will not.
+c. A 95% CI will not contain 0, but a 99% CI will.
+d. Neither a 95% CI nor a 99% CI interval will contain 0. 
+
+Write your answer here.
