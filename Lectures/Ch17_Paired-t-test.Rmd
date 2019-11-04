@@ -148,8 +148,8 @@ head(chol_dat)
 
 ## Calculate the test statistic, p-value, and 95% confidence interval
 
-- Then use `summarize` to calculate the mean difference ($\hat{\mu}_d$), its
-standard error ($\hat{s}_d/\sqrt{n}$), and the observed t-statistic:
+- Then use `summarize` to calculate the mean difference ($\bar{x}_d$), its
+standard error (${s}_d/\sqrt{n}$), and the observed t-statistic:
 
 ```{r calc-t-stat}
 summary_stats <- chol_dat %>% 
@@ -159,6 +159,26 @@ summary_stats <- chol_dat %>%
 
 summary_stats
 ```
+
+## Sidebar: The pull() function
+
+What does `pull()` do in R and how does it compare to `select()`?
+
+Examine the structure of the output after `pull()`ing vs. `select()`ing `t_stat`
+from the `summary_stat` data frame:
+
+```{r}
+summary_stats %>% pull(t_stat) %>% str()
+summary_stats %>% select(t_stat) %>% str()
+```
+
+## Sidebar: The pull() function
+
+```{r, echo=F}
+img1 <- png::readPNG("../Images/pull-vs-select.png")
+grid::grid.raster(img1)
+```
+
 
 ## Calculate the test statistic, p-value, and 95% confidence interval {.tiny}
 
@@ -269,8 +289,8 @@ One of the tenets of design is to maximize <b class = "greentext">**efficiency**
 ## When is a paired design the appropriate design?
 
 - When "the treatment alleviates a condition rather than affects a cure." (Hills and Armitrage, 1979)
-- The effect of treatment is short-term. After $x$ amount of time, participants return to baseline.
-- The $x$ above refers to the <b class = "greentext">**wash-out**</b> period. Before applying the second treatment, participants should have enough time to reach their baseline level. Otherwise there may be a <b class = "greentext">**carry over**</b> effect.
+- The effect of treatment is short-term. After $t$ amount of time, participants return to baseline.
+- The $t$ above refers to the <b class = "greentext">**wash-out**</b> period. Before applying the second treatment, participants should have enough time to reach their baseline level. Otherwise there may be a <b class = "greentext">**carry over**</b> effect.
 
 ## When is a paired design the appropriate design?
 
@@ -343,7 +363,7 @@ ggplot(soup_dat, aes(x = trt, y = mean)) +
 - Total removal of between-subject variability
 - Observational settings at high risk of confounding due to differences between subjects
 can also benefit from this design
-- Here, we're less interested in testing, and more interested in effect estimation
+- In oberservational studies, we're less interested in hypothesis testing, and more interested in estimating the difference and its confidence interval.
 
 ## Example: Vaccination during infancy and healthcare utilization
 
@@ -403,7 +423,7 @@ was 0.85 (0.80–0.90)."
 
 1. Use a paired t-test in an experimental setting where the data is paired by design.
     - Pairing can greatly improve efficiency of the estimator 
-2. Incorporate pairing/clustering into observational analyses when the data is paired/cluster by design or in nature.
+2. Incorporate pairing/clustering into observational analyses when the data is paired/clustered by design or in nature.
     - Pairing eliminates confounding from factors that differ between subjects
 
 ## Resources {.tiny}
