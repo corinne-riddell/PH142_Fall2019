@@ -1,0 +1,127 @@
+---
+title: "Hit the dot: Dominant vs. non-dominant hand. Is there a difference?"
+output: pdf_document
+---
+
+Go to this [website](https://faculty.washington.edu/chudler/java/rldot.html)
+
+Overview of the game: See how many dots you can hit in the grid within 30 seconds. We will
+each try this once with our dominant hand and once with our non-dominant hand 
+(**where your dominant hand is the one you prefer to operate a computer mouse or
+track pad with**).
+
+Instructions:
+1. Flip a coin to see which hand to play the game with first:
+    - Heads = dominant hand first
+    - Tails = non-dominant hand first
+
+  Alternatively, rather than flipping a coin you can use `r rbinom(1, 1, 0.5)` to simulate a coin flip.
+
+2. Push the **Start Game** button. It will start a timer counting down from 30 seconds.
+During that time use only the specified hand to click the moving dot as fast as 
+you can. After 30 seconds, the game will stop and display the number of dots that 
+you hit. Record that number in the shared google sheet for your lab (links shown 
+below). **Make sure you put it in the correct column!**. Also fill out the last column of the dataset "Dominant_hand_first". Set this variable to TRUE if you used your dominant hand in the first game or FALSE if you used your non-dominant hand in the first game.
+
+# Lab 101B: https://docs.google.com/spreadsheets/d/1V9HCFIiXu5OtYV15DgHzBh1K6c0Rey-cFtmbmQnGiTQ/edit?usp=sharing
+# Lab 102B: https://docs.google.com/spreadsheets/d/1YdBK_IMSVBiF2mKY37QvlDF60usomwD0BIxLueTZxW0/edit?usp=sharing
+# Lab 103B: https://docs.google.com/spreadsheets/d/1aXMAnEzbmIRk6CG8i3GiUbt2I8Qr6Hib8rugfHuz5Qk/edit?usp=sharing
+# Lab 104B: https://docs.google.com/spreadsheets/d/1i3-rxNqeK__dLHlF5rXJd6kPkFGgt4djV9pd43oTnpU/edit?usp=sharing
+# Lab 105B: https://docs.google.com/spreadsheets/d/1j4SEju5-Zw_FSVFhvg1tysV-LpAE4PsQ4a_JgpZ9pK4/edit?usp=sharing
+# Lab 106B: https://docs.google.com/spreadsheets/d/12BzECQ1sOT2UYvU_rKMqgsFCMFBpV5gaxkf3YWDEH9s/edit?usp=sharing
+# Lab 107B: https://docs.google.com/spreadsheets/d/1d1zVuFwtpsKPthuB6XWYHrJgM2v4Z4Ok7xJYzophESU/edit?usp=sharing
+# Lab 108B: https://docs.google.com/spreadsheets/d/1FtjtTpCJ7IdoMwXYHQ5GGgFw_0-VSpcbwPbAx937JuA/edit?usp=sharing
+# Lab 109B: https://docs.google.com/spreadsheets/d/1uToXGdBNlhh1ltXzO-VIvyDTIAPL_GKLKznLTRvgykc/edit?usp=sharing
+# Lab 110B: https://docs.google.com/spreadsheets/d/1v9Mvm2hAOB3orINrcbVldJaH1UHcsotynn91Ppyi7OY/edit?usp=sharing
+
+3. Re-do the game, this time with the other hand. Record the results in the 
+spreadsheet. 
+
+4. Read the data from the google sheet into R. Uncomment the lines of code below.
+Note that in the third line of code below you need to update the `x` argument
+to be your specific lab in order to pull the correct dataset.
+
+```{r read-into-r}
+#library(googlesheets)
+#library(dplyr)
+#shared_gs <- gs_title(x = "Lab9_1XXB") #PLEASE REPLACE XX ACCORDING TO YOUR OWN SECTION 
+# a browser will open asking you to authenticate who you are. 
+# AUTHENTICATE USING YOUR BERKELEY ACCOUNT, OR YOU WON'T HAVE ACCESS!
+# You can change the sheet title to you lab if you'd like. 
+#our_sheet <- shared_gs %>% gs_read("Sheet1")
+```
+
+5. These data are very naturally paired. What two assumptions do we need
+to make to use a paired t-test? For each assumption, either write why you think 
+the assumption is met (or not met), or investigate the assumption by creating a plot,
+and comment on whether the plot supports the assumption.
+
+Answer:
+
+```{r investigate-assumption}
+# Write your code here to investigate the other assumption. Hint: You need to first compute a new variable using 
+# dplyr before you make your plot :) . Don't forget to load your libraries!
+
+```
+
+
+6. Before performing the test, take a look at the data by making a "dumbbell" 
+plot. This type of plot has student name on the y-axis, and the number of dots 
+hit on the x axis. For each student you put a point at the two reaction times 
+and connect them with a line. Here is the code to make the plot. We can also 
+color the points by hand dominance. Based on the plot, comment on whether there 
+appears to be a significant difference between the number of points hit between
+the dominant and non-dominant hand.
+
+Here is the code to make the dumbbell chart. You will need to change `dat` to 
+the name of your saved dataset.
+
+```{r make-dumbell-chart}
+# You are not expected to know how to make this plot yourself!
+
+# ggplot(data = dat, aes(x = Dominant_num_dots_hit, y = Student_name)) +
+#   geom_segment(aes(xend = Non_dominant_num_dots_hit, yend = Student_name)) + 
+#   geom_point(aes(col = "Dominant")) +
+#   geom_point(aes(x = Non_dominant_num_dots_hit, col = "Non-dominant"))
+```
+
+Comment:
+
+7. Use R to conduct a paired two-sided t-test on the data, and the 95% confidence
+interval for the test. Interpret the p-value and the confidence interval for the 
+test. Hint: see the code from the paired t-test (Monday's lecture on the rest of 
+Chapter 17). You can use one function to both calculate the p-value for the 
+two-sided test and create a 95% confidence interval for the difference:
+
+```{r conduct-paired-t-test}
+#Your code here
+```
+
+Answer:
+
+
+
+8. Re-run the code for the test, but this time set `paired=F`, which is incorrect.
+The reason we want to run the incorrect test is to compare the p-value from this test
+to the p-value from the paired t-test. Is it smaller or larger? Why is that?
+
+```{r}
+#Your code here
+```
+
+Answer: 
+
+9. Lastly, we didn't use the data on the last column in the data frame, which recorded
+whether you were randomized to using your dominant hand first. Why might this matter?
+What could we have done to investigate whether it mattered?
+
+Answer:
+
+
+**Submission** 
+
+Please submit this lab file *directly* to Gradescope under the "Lab 9" 
+Assignment. You can do this by 
+knitting your file and downloading the PDF to your computer. Then navigate to 
+Gradescope.com to submit your assignment. Here is a tutorial if you need help: https://www.gradescope.com/get_started. Scroll down on that page to 
+"For students:submitting homework".
