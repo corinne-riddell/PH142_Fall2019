@@ -1,0 +1,300 @@
+---
+title: "Lab 10:  Chi Squared Testing"
+author: "Your Name and Student ID"
+date: "Today's Date"
+output: pdf_document
+---
+
+### Instructions
+
+
+1) We will be using data tidying functions and plotting functions to work through this lab.  Load the 
+required packages into our R session.
+
+```{r Setup}
+
+### Code your answer here.
+
+```
+
+### Chi Squared Testing
+
+As the textbook mentions, the chi-square statistic is a measure of how far 
+the observed counts in a two-way table are from the expected counts. The 
+formula for the statistic is:
+
+$$ X^2 = \sum\frac{(count_{observed} - count_{expected})^2}{count_{expected}} $$
+
+The sum is over all cells in the table. That is, there are as many terms in 
+the sum as there are cells in the table. Each term in the sum is called a 
+$X^2$ component.
+
+### Part 1) Chi Squared Test for Goodness of Fit
+
+**Question 1: Melanoma**
+Adapted from Baldi and Moore Question 21.29
+
+Melanoma is a rare form of skin cancer that accounts for the great majority of skin cancer fatalities. UV exposure is a major risk for melanoma. A question we would like to explore is if the body parts which have increased sun exposure are more susceptible to melanoma. A random sample of 310 women diagnosed with melanoma were classified according to the known location of the melanoma on their bodies. Here are the results:
+
+Location | Head/Neck | Trunk | Upper Limbs | Lower Limbs |
+---------|-----------|-------|-------------|-------------|
+Count    |     45    |   80  |     34      |      151    |
+---------|-----------|-------|-------------|-------------|
+Expected |           |       |             |             |
+---------|-----------|-------|-------------|-------------|
+
+(a) Assuming each of the four locations represent roughly equal skin areas, fill in the expected counts for the four areas of the body.
+
+
+(b) What are the assumptions for completing a Chi Squared test? Are the conditions met for this example?
+
+Your answer here:
+
+(c) Perform a chi-squared test for goodness of fit. State the null and alternative hypotheses. Use R to calculate your test statistics and report this value. Calculate and report the p-value. 
+
+```{r Q1 Melanoma Locations}
+
+#Replace with your code.
+  
+```
+
+(d) Interpret the p-value in the context of the problem. What are your conclusions?
+
+Your answer here:
+
+\newpage
+
+**Question 2**
+Adapted from: http://sphweb.bumc.bu.edu/otlt/MPH-Modules/BS/BS704_HypothesisTesting-ChiSquare/BS704_HypothesisTesting-ChiSquare2.html
+
+The National Center for Health Statistics (NCHS) provided data on the distribution of weight (in categories) among Americans in 2002. The distribution was based on specific values of body mass index (BMI).
+
+Underweight was defined as BMI< 18.5, Normal weight as BMI between 18.5 and 24.9, overweight as BMI between 25 and 29.9 and obese as BMI of 30 or greater. 
+
+Americans in 2002 were distributed as follows: 2% Underweight, 39% Normal Weight, 36% Overweight, and 23% Obese. Suppose we want to assess whether the distribution of BMI is different in the Framingham Offspring sample.
+
+Using data from the n = 3,326 participants who attended the seventh examination of the Offspring in the Framingham Heart Study we created the BMI categories as defined and observed the following:
+
+BMI      | Underweight | Normal Weight | Overweight  |     Obese   | Total |
+---------|-------------|---------------|-------------|-------------|-------|
+Count    |     20      |     932       |    1374     |    1000     |  3326 |
+---------|-------------|---------------|-------------|-------------|-------|
+Expected |             |               |             |             |       |
+---------|-------------|---------------|-------------|-------------|-------|
+
+(a) State the null and alternative hypotheses. Fill in the expected counts for this statistic.
+
+Hypotheses:
+
+(b) For this test, we will use a 5% signficance level. For what value of the test statistic under Chi-Squared distribution will we reject the null hypothesis?
+(Hint: What are the degrees of freedom for this test?)
+
+```{r Question 2 BMI part b}
+#Replace with your code
+```
+Your answer here:
+
+(c) Perfrom a chi-squared test for goodness of fit. Calculate and report your test statistic. Calculate and interpret your p-value. What are your conclusions?
+
+```{r Question 2 BMI part c}
+#Replace with your code
+```
+
+Your answer here:
+
+
+\newpage
+
+### Chapter 22 - Chi Squared Test for Independence
+
+The chi-square test for a two-way table with r rows and c columns uses
+critical values from the chi-square distribution with (r-1)(c-1) degrees
+of freedom.
+
+* Side question: Think about how might we determine a p-value for a chi-square test statistic?
+
+In research, we are often interested in making the assumption that two explanatory variables are (mostly)
+independent.  Independence is actually one condition which permits us to include multiple explanatory variables 
+in a linear regression (i.e. the line of best fit model that you explored in the first part of the course). 
+Thus, the Chi-Square test of independence can be quite useful as a tool to explore whether two 
+categorical variables show substantial dependence.
+
+In the second part of this lab, we proceed to walk through the data cleaning, visualization, and 
+analysis required to carry out a Chi Square test for two-way tables.
+
+
+\newpage
+
+## 3. Do angry people have more heart disease?? (Introduction and data are from the text, Ex 22.40):
+
+People who get angry easily tend to have more heart disease. That’s the conclusion of a study that 
+followed a random sample of 12,986 people from three locations for about four years. 
+All subjects were free of heart disease at the beginning of the study. 
+The subjects took the Spielberger Trait Anger Scale test, which measures how prone a person 
+is to sudden anger. Here are data for the 8474 people in the sample who had normal blood pressure. 
+18 CHD stands for “coronary heart disease.” This includes people who had heart attacks and 
+those who needed medical treatment for heart disease.
+
+|        | Low anger   | Moderate anger | High anger |
+|--------|-------------|----------------|------------|
+| CHD    |     53      |      110       |     27     |
+| No CHD |     3057    |     4621       |    606     |
+
+
+Let's explore if these data support the conclusion of the study!
+
+
+3a) Based on the two-way table above and the framework of the study, write out the null and alternative 
+hypotheses that we will be exploring via a Chi-Squared test.
+
+
+Write your answer here. 
+
+
+
+We need to figure out what the expected counts of heart disease and anger levels would be if the 
+two categorical variables are independent.  Here is a data set of our two-way table values:
+
+```{r Create Dataset, include=FALSE}
+
+chd_by_anger_level <- 
+  data.frame(anger_level   = c("Low", "Low",    "Moderate", "Moderate", "High", "High"),
+             heart_disease = c("CHD", "No CHD", "CHD",      "No CHD",   "CHD",  "No CHD"),
+             actual_count  = c(53,    3057,     110,        4621,       27,     606),
+             stringsAsFactors = FALSE)
+
+
+```
+
+
+3b) Using our dplyr tools, compute row and column totals and fill out the two-way table below:
+[HINT: The code for computing row totals is given.  Use this framework to compute column totals]
+```{r Totals}
+
+### Starter code for row totals. Uncomment the following lines
+#(Keyboard shortcut Ctrl Shift C or Command Shift C)
+
+# chd_by_anger_level <-
+#   chd_by_anger_level %>%
+#   group_by(heart_disease) %>%
+#   mutate(row_total = sum(actual_count)) %>%
+#   ungroup()
+
+### Code your answer here.
+
+
+```
+
+
+
+|              | Low anger   | Moderate anger | High anger |  Row Total    |  
+|--------------|-------------|----------------|------------|---------------|
+| CHD          |     53      |      110       |     27     |               |
+| No CHD       |     3057    |     4621       |    606     |               |
+|              |             |                |            |               |
+| Column Total |             |                |            |               |
+
+
+3c) Create a new column in the data set with expected counts for each cell in the two-way table.
+
+```{r Expected counts}
+
+### Code your answer here.
+
+```
+
+
+
+3d) Before moving forward with analysis, confirm two requirements for the Chi-Squared test of independence, names:
+
+* No more than 20% of the expected counts are smaller than 5.0, and 
+* All individual expected counts are 1.0 or greater.
+
+```{r Scratch Work}
+
+### Code any calculations here.
+
+```
+
+
+Your answer here.
+
+
+
+
+While, we are set to move forward with a Chi-Square test, let's practice visualizing our data to see if there 
+may be a significant relationship between heart disease and anger.
+
+3e) First, calculate the probability of anger level conditional on CHD Status
+
+```{r Calculated conditional distribution}
+
+### Code your answer here.
+
+
+```
+
+
+3f) Reference your Ch 22 notes and create a dodged 
+bar graph of CHD vs anger.  Don't forget labels and title!  Interpret the results.
+
+```{r Create Plot}
+
+### Code your answer here.
+
+
+```
+
+
+Write your interpretation here.
+Solution:  There are some peculiar differences but it's a close call that leaves us interested in whether the Chi-Square test will be significant or not.
+
+
+Now, we are ready to move forward with our Chi-Square test of independence.
+
+3g) Compute the Chi-Square test statistic. 
+[Optional: Practice dynamic coding. Assign important variables to your environment once, and only call the variable names when computing the 
+final test statistic.]
+
+
+```{r Computing the Test Statistic}
+
+### Code your answer here.
+
+
+```
+
+
+3h) Determine the p-value of your Chi-Square test statistic and interpret the p-value for 
+a 5% level Chi-Square test in the context of this problem.
+
+```{r Determine p-value}
+
+### Code your answer here.
+
+```
+
+Write your interpretation here.
+
+
+3i) How might we have tested for independence between anger and heart disease prevalence during the 
+probability section of the course?  Would we have found that anger and heart disease are independent 
+using our old problem-solving process?  How does this method differ from comparing conditional 
+probabilities?
+
+
+Write your answer here.
+
+
+
+**Submission** 
+
+Please submit your lab *directly* to 
+Gradescope. You can do this by knitting your file and downloading the PDF to 
+your computer. Then navigate to Gradescope.com to submit your assignment. Here 
+is a tutorial if you need help: https://www.gradescope.com/get_started. 
+Scroll down on that page to "For students:submitting homework".
+
+
+
+
