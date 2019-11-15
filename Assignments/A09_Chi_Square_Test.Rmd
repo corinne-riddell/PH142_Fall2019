@@ -44,7 +44,7 @@ households earning < $30,000 is different from that of all income levels. Does
 this correspond to a chi-square test of independence or a chi-square test for 
 goodness of fit?
 
-<your answer here.>
+Your answer here.
 
 
 \newpage
@@ -53,7 +53,7 @@ goodness of fit?
 incomes < $30,000. State the null hypothesis under which these expected counts
 were computed.
 
-<your answer here.>
+Your answer here.
 
 
 \newpage
@@ -61,7 +61,7 @@ were computed.
 1.c) [2 marks] Compute the chi-square statistic and comment on the cell (i.e. term in summation) that contributes
 the most to the statistic. 
 
-<your answer here.>
+Your answer here.
 
 
 \newpage
@@ -70,7 +70,7 @@ the most to the statistic.
 you believe there is evidence against the null hypothesis in favor of the alternative
 hypothesis.
 
-<your answer here.>
+Your answer here.
 
 
 \newpage
@@ -96,7 +96,7 @@ these data on age and HPV status for the sample:
 
 2.a) [1 mark] Which variable is explanatory and which is response?
 
-<Your answer here.>
+Your answer here.
 
 
 \newpage
@@ -105,7 +105,7 @@ these data on age and HPV status for the sample:
 whether there is a relationship between age group and HPV status. State these 
 hypotheses using the language or notation of conditional distributions.
 
-<Your answer here.>
+Your answer here.
 
 
 \newpage
@@ -116,7 +116,7 @@ chi-square statistic? (That is, can you tell based on this plot when the observe
 count will differ most from the expected count under the null hypothesis of no
 relationship between age group and HPV status?) 
 
-<Your answer here.>
+Your answer here.
 
 
 ```{r create-hpv.data, echo=F, out.width="80%", fig.align=T, message=F}
@@ -166,7 +166,7 @@ Expected counts:
 2.e) [3 marks] Calculate the test statistic and p-value and assess whether there is 
 evidence against the null in favor of the alternative.
 
-<your answer here.>
+Your answer here.
 
 ```{r}
 # your code here
