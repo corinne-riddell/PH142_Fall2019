@@ -1,0 +1,193 @@
+---
+title: "Assignment 9"
+author: "Your name and student ID"
+date: "Today's date"
+output:
+  pdf_document: default
+---
+
+* Due date: November 22, 5:00pm (make sure to provide enough time for Gradescope
+submission to be uploaded if you include large image files).
+* Late penalty: 50% late penalty if submitted within 24 hours of due date, no 
+marks for assignments submitted thereafter.
+* Please do not change the format of the assignment. This makes grading less efficient.
+* Submission process: Please submit a PDF of your assignment to Gradescope. You 
+must tell Gradescope which questions are on which pages. If you can't see it 
+properly on Gradescope, open the PDF in a PDF viewer at the same time so you 
+can make the selections accurately. Not selecting, or selecting inaccurately
+will result in points being deducted since this makes grading much less efficient.
+
+Helpful hint:
+
+- Knit your file early and often to minimize knitting errors! If you copy and 
+paste code, you are bound to get an error that is hard to diagnose. Hand-writing 
+code is the way to smooth knitting! We recommend knitting your file each time 
+after you write a few sentences/add a new code chunk, so you can detect the 
+source of knitting errors more easily.
+ 
+\newpage
+--------------------------------------------------------------------------------
+
+Question 1. [7 marks total] Parental leave is often compensated to some degree, but the amount
+of compensation varies greatly. You read a research article that stated, 
+"across people of all incomes, 47% of leave-takers received full pay during 
+their leave, 16% received partial pay, and 37% received no pay." 
+
+After reading this, you wonder what the distribution of parental leave payment 
+pay is for low income households. Suppose you conduct a survey of leave-takers within households 
+earning less than $30,000 per year. You surveyed 225 people (selected in a 
+random sample) and found that 51 received full pay, 33 received partial pay, and
+141 received no pay.
+
+1.a) [1 mark] You would like to investigate whether the distribution of pay for 
+households earning < $30,000 is different from that of all income levels. Does 
+this correspond to a chi-square test of independence or a chi-square test for 
+goodness of fit?
+
+<your answer here.>
+
+
+\newpage
+
+1.b) [2 marks] What are the expected counts of leave-takers among households with
+incomes < $30,000. State the null hypothesis under which these expected counts
+were computed.
+
+<your answer here.>
+
+
+\newpage
+
+1.c) [2 marks] Compute the chi-square statistic and comment on the cell (i.e. term in summation) that contributes
+the most to the statistic. 
+
+<your answer here.>
+
+
+\newpage
+
+1.d) [2 marks] Compute the p-value for your test statistic and conclude whether 
+you believe there is evidence against the null hypothesis in favor of the alternative
+hypothesis.
+
+<your answer here.>
+
+
+\newpage
+
+
+Question 2. [9 marks total] Human papillomavirus (HPV) is a very common STI that most sexually
+active persons will encounter during their lifetimes. While many people clear 
+the virus, certain strands can lead to adverse health outcomes such as 
+genital warts and cervical cancer. 
+
+Suppose that you selected a random sample from a population and collected
+these data on age and HPV status for the sample:
+
+|Age Group    | HPV +        | HPV -          | Row total   |
+|:-----------:|:------------:|:--------------:|:-----------:|
+|14-19        | 160          | 492            | 652 (33.9%) |
+|20-24        | 85           | 104            | 189 (9.8%)  |
+|25-29        | 48           | 126            | 174 (9.1%)  |
+|30-39        | 90           | 238            | 328 (17.1%) |
+|40-49        | 82           | 242            | 324 (16.9%) |
+|50-59        | 50           | 204            | 254 (13.2%) |
+| Col total   | 515 (26.8%)  | 1406 (73.2%)   | 1921        |
+
+2.a) [1 mark] Which variable is explanatory and which is response?
+
+<Your answer here.>
+
+
+\newpage
+
+2.b) [2 marks] Formulate null and alternative hypotheses using these data to test
+whether there is a relationship between age group and HPV status. State these 
+hypotheses using the language or notation of conditional distributions.
+
+<Your answer here.>
+
+
+\newpage
+
+2.c) [1 mark] Run the code below to examine the conditional distribution of age by HPV
+status. Based on this plot, which age group will contribute the most to the 
+chi-square statistic? (That is, can you tell based on this plot when the observed
+count will differ most from the expected count under the null hypothesis of no
+relationship between age group and HPV status?) 
+
+<Your answer here.>
+
+
+```{r create-hpv.data, echo=F, out.width="80%", fig.align=T, message=F}
+age_group <- rep(c("14-19", "20-24", "25-29", "30-39", "40-49", "50-59"), 2)
+hpv_test <- c(rep("positive", 6), rep("negative", 6))
+number_of_women <- c(160, 85, 48, 90, 82, 50, 
+                     492, 104, 126, 238, 242, 204)
+
+hpv_data <- data.frame(age_group, hpv_test, number_of_women)
+
+library(tidyverse)
+hpv_data <- hpv_data %>% group_by(hpv_test) %>% 
+  mutate(sum_women = sum(number_of_women),
+         prop_women_age = number_of_women/sum_women)
+
+ggplot(hpv_data, aes(x = age_group, y = prop_women_age)) + 
+  geom_bar(aes(fill = hpv_test), stat = "identity", position = "dodge") +
+  theme_minimal(base_size = 15) +
+  labs(y = "Proportion", x = "Age", 
+       main = "Conditional distribution of age by HPV status")
+```
+
+
+
+\newpage
+
+2.d) [2 marks] Fill out the table of expected counts under the null hypothesis of no 
+association between age group and HPV status. You don't need to show your 
+work, but make sure you can calculate the expected counts by hand, using a 
+calculator.
+
+Expected counts:
+
+|Age Group    | HPV +        | HPV -        | 
+|:-----------:|:------------:|:------------:|
+|14-19        | ?            | ?            | 
+|20-24        | ?            | ?            | 
+|25-29        | ?            | ?            | 
+|30-39        | ?            | ?            | 
+|40-49        | ?            | ?            |
+|50-59        | ?            | ?            |
+
+
+
+\newpage
+
+2.e) [3 marks] Calculate the test statistic and p-value and assess whether there is 
+evidence against the null in favor of the alternative.
+
+<your answer here.>
+
+```{r}
+# your code here
+```
+
+
+
+\newpage
+
+
+Question 3. [7 marks] Fill in the blanks. Please let the asterisks so your answers
+are bolded in the rendered file.
+
+The bootstrap method is used to compute **_______________**, while the permutation
+test is used to conduct **_______________**.
+
+Bootstrapping involves taking repeated simple random samples **_______________** replacement
+from the original sample of the **_______________** size as the original 
+sample. For each bootstrap, the statistic of interest is calculated (say the median).
+These bootstrapped statistics are then plotted on a **_______________** to visualize their distribution and the 
+**_______________** and **_______________** quantiles are computed to calculate a
+95% confidence interval.
+
+
