@@ -1,0 +1,170 @@
+---
+title: "Assignment 10: Regression of voting patterns across 3141 US counties"
+author: "Your name and student ID"
+date: "Today's date"
+output:
+  pdf_document: default
+---
+
+* Due date: Dec 2, 5:00pm (make sure to provide enough time for Gradescope
+submission to be uploaded if you include large image files).
+* Please do not change the format of the assignment. This makes grading less efficient.
+* Submission process: Please submit a PDF of your assignment to Gradescope. You 
+must tell Gradescope which questions are on which pages. If you can't see it 
+properly on Gradescope, open the PDF in a PDF viewer at the same time so you 
+can make the selections accurately. Not selecting, or selecting inaccurately
+will result in points being deducted since this makes grading much less efficient.
+
+Helpful hint:
+
+- Knit your file early and often to minimize knitting errors! If you copy and 
+paste code, you are bound to get an error that is hard to diagnose. Hand-writing 
+code is the way to smooth knitting! We recommend knitting your file each time 
+after you write a few sentences/add a new code chunk, so you can detect the 
+source of knitting errors more easily.
+ 
+\newpage
+--------------------------------------------------------------------------------
+
+### Voting during the 1992 election
+
+In the spirit of the upcoming 2020 presidential election, I thought it would be 
+interesting to consider some historical data on voting patterns across US counties.
+
+This code loads in the data frame `counties`:
+
+```{r}
+load("../Data/A10_counties.sav")
+```
+
+These data are from the 1992 election and look at the percent of votes cast 
+(for each county) for the `democrat` (Bill Clinton), `republican` (George Bush),
+and independent presidential nominees (Ross `Perot`). 
+
+Ideally, if you were interested in voting patterns, you might look at the 
+relationship between individual characteristics and whether each individual 
+voted Democrat or Republican. However, data like that is often hard to come by.
+The `counties` data provide data on 3141 counties. Use `View()` to examine these
+data briefly and read the labels corresponding to the variables. Note that Alaska
+is not included and that two other counties with populations = 0 have also been 
+excluded.
+
+As discussed in class we have the entire population (not just a sample), so 
+strictly speaking we don't need to perform statistical inference. However, we
+might pretend this is a sample so that we can apply the techniques of inference 
+and gain competence creating and interpeting a linear model.
+
+\newpage
+Question 1 [2 marks]. Looking only at California, plot the relationship between 
+the % of votes cast for the Democratic candidate (`democrat`) 
+and the population density of the county (`pop.density`). 
+
+```{r}
+# Your code here.
+```
+
+\newpage
+Question 2 [1 mark]. 
+The above plot you made does not look very good for question 1. 
+The distribution of population density is skewed right, 
+with a few counties having much higher densities than the majority of counties.
+To see which counties these are, we will use `geom_text_repel` from the 
+library `ggrepel`. 
+The template for using this function is: 
+`geom_text_repel(aes(label = your_labelling_var))`. 
+You will want to set the labeling variable to be the variable in the dataset
+containing the county names.
+
+```{r}
+library(ggrepel)
+
+# Your code goes here.
+```
+
+The current issue with these data is that San Francisco 
+(as you can now hopefully point out) 
+has a much higher population density than other counties, 
+and that generally there is a large right skew in the distribution 
+of the population density variable. 
+
+If we tried and fit a linear model to these data, it would not fit well-- because
+the relationship between population density and the response variable is not 
+linear. However, this is the perfect situation to try transforming the x variable.
+
+\newpage
+Question 3. [2 marks] Try adding a log-transformed version of population density
+to the data frame and remake your plot using this new variable. Keep the 
+population labels. Also add a smoothed fitted line:
+
+```{r}
+# Your code goes here.
+```
+
+\newpage
+Question 4 [4 marks]. Describe the relationship between the (logged) population density 
+and the response variable in terms of the shape, direction, strength, and outliers.
+These are concepts from Chapter 3. Calculate the correlation to
+comment on one of these aspects.
+
+<Your description here.>
+
+\newpage
+Question 5 [4 marks] Run a linear model regression of the % votes cast for the democratic
+candidate as a function of the population density. Make sure you get the order
+of variables right in the `lm()` function! Use a `broom()` command to show the 
+slope and intercept estimates. Interpret the association between the logged population 
+density and the response variable. (You can `View()` the data frame to make sure
+you are getting your units right by checking the descriptions in the labels for 
+each variable). Report and interpret the r-squared for the model.
+
+```{r}
+# Your code here.
+```
+
+<Your solution goes here.>
+
+\newpage
+Question 6 [4 marks]. Using the code learned in class, that was also shown in 
+last week's lab, make the four plots to examine the assumptions. 
+
+```{r}
+# Your code goes here.
+```
+
+\newpage
+Question 7. [4 marks] Comment on each of the plots and conclude about which 
+assumptions appear violated vs. not violated. Don't forget to comment on the 
+one assumption that cannot be investigated using plots.
+
+<Your comments here>.
+
+\newpage
+-------------------------------------------------------------------------------
+
+### Part 2: Choose your own adventure [10 marks for completion]
+
+Using the `counties` data frame pick a state (California if you still want to, or
+another one) and investigate the relationship between voting patterns and an
+explanatory variable of your choice. You can keep using `democrat` as the response 
+variable if you want to further your investigation of predictors of this 
+response, or you can change it to `republican`, or `Perot` (the independent 
+candidate). Set your explanatory variable to one of:
+
+- `college`
+- `crime`
+- `white`
+- `black`
+- `farm`
+- `age6574` or `age75`, or a `mutate`d variable based on age combining across these two age variables.
+- `income`
+
+Following questions above, your task:
+
+- Make a scatter plot of the relationship, with labels for the counties and a 
+smoothed fitted line added to the plot. Link the size of the points to population
+density.
+- Comment on the relationship in terms of form, direction, strength, and outliers.
+- Even if the relationship is clearly not linear, make the residual plots anyway
+and comment on whether you can catch the non-linearity or a violation of one of 
+the other model assumptions using the plots.
+- 10 marks for the full question with marks deducted for insufficient examination in any of these steps.
