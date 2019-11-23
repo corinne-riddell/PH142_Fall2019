@@ -7,7 +7,7 @@ output: pdf_document
 
 ### Learning objective for today
 
-* Learn how to conduct a hypothesis test to evaluate whether there is a difference.
+* Learn how to conduct a hypothesis test to evaluate whether there is a difference
 across multiple means. This test is known as ANOVA, or the analysis of variance
 * Conduct this test using the `aov()` function in R.
 * After conducting the learn how to detect specifically which means are different
@@ -443,7 +443,7 @@ it overcomes the problem of **multiple testing**
 Here is the R code and output:
 
 ```{r, out.width="80%", fig.align='center'}
-diffs <- TukeyHSD(cancer_anova, conf.level = 0.05) %>% tidy()
+diffs <- TukeyHSD(cancer_anova, conf.level = 0.95) %>% tidy()
 diffs
 ```
 
