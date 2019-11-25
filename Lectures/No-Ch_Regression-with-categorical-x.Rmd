@@ -12,7 +12,7 @@ constaints as outlined previously.
 2. Content. Heavily focused on Part III of the course (Chapter 17-24 and the 
 bootstrap, permutation and other non-parametric tests, covered after Thanksgiving). 
 We will hold an inclass review session (Jeopardy) on December 6th and the GSIs will
-also review content during labs on the week of Dec 6.
+also review content during labs on the week of Dec 2 (mistake: used to say Dec 6, but should be Dec 2).
 3. Code that is fair game for writing/interpretation of the code or resulting
 output: `qt()`, `pt()`, `qnorm()`, `pnorm()`, `pchisq()`, testing functions(`t.test()`, 
 `binom.test()`, `prop.test()`, `chisq.test()`), 
