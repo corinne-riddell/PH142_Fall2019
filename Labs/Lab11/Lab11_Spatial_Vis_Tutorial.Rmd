@@ -1,0 +1,289 @@
+---
+title: "Spatial Visualization Tutorial"
+date: "11/23/2019"
+# note to add the following line so R knows to create an interactive document
+runtime: shiny
+output: html_document
+---
+
+
+This optional supplement to your housing price lab includes:
+
+\item __I__ An introduction to spatial visualization of data (just for your interest, no need to study)
+
+We are still using the Boston housing data set.  However, we will be loading a 
+different version of the data that includes granular geographic variables.
+
+First, make sure the following packages are installed:
+```{r, warning = FALSE, message = FALSE}
+### packages we will use:
+### (comment-out runs of install.packages out once installed)
+
+### helpful HTML functions
+#install.packages("httpuv)
+library(httpuv)
+#install.packages("htmltools)
+library(htmltools)
+### R's web app creation package
+library(shiny)
+
+### Our Mapping Package
+#install.packages("leaflet")
+library(leaflet)
+### only installs tigris package if it has not yet been installed.
+if(!"tigris" %in% installed.packages()) {
+  install.packages("tigris") } 
+
+library(tigris)
+#install.packages("sf")
+library(sf)
+
+
+### Helpful coloring functions
+#install.packages("RColorBrewer")
+library(RColorBrewer)
+
+### the classics
+library(ggplot2)
+library(tidyr)
+library(broom)
+library(dplyr)
+```
+
+Now, we will load the Boston housing data with new variables:
+```{r}
+housing_data <- 
+  readRDS("../../Data/boston_housing_data_with_geo_vars.RDS")
+```
+
+
+# Bonus: Interactive Spatial Plots and For-Report Spatial Plots
+
+Oftentimes, especially during the exploratory stage of research, 
+investigators are interested in examining possible spatial 
+relationships of data.
+
+Our Boston housing data presents an especially good opportunity 
+to see if there are any interesting spatial patterns in our 
+variables.
+
+The Leaflet package from R uses HTML code to create interactice maps. 
+So, when we send the interactive Leaflet maps to someone reviewing our work, they can zoom, hover over data labels, and 
+enjoy other interactive functions that we program into the map. 
+
+
+First, I will create a heatmap of median neighborhood home values 
+using Leaflet.
+
+One thing to keep in mind is that for almost all of this code, 
+I googled how to do things and then slightly altered code snippets 
+that were available online.  If you don't know how to do something, 
+chances are you can find a helpful answer on the web.
+
+```{r}
+### I want to color my heatmap data from yellow to red according to 
+### the home value. 
+### I googled for this code snippet to color scale a continuous variable
+pal <- colorNumeric(
+  palette = colorRampPalette(c('yellow', 'red'))(length(housing_data$MEDV)), 
+  domain = housing_data$MEDV)
+
+
+### These functions are from the Leaflet package. almost all of this I made by
+### googling how to do so.
+housing_data %>%
+  leaflet() %>%
+  addTiles() %>%
+  addCircleMarkers(lng = ~lon, lat = ~lat,
+                   color = ~pal(MEDV),
+                   popup = ~as.character(MEDV),
+                   radius = 0.5) %>%
+  ### This is the background art for the map.
+  addProviderTiles(providers$CartoDB.Positron) %>%
+  addLegend(position = "topright", pal = pal, 
+            values = housing_data$MEDV, bins = 7,
+            ### HTML function allows me to add line break using <br/>
+            title = htmltools::HTML("Median Home <br/> Value ($1,000's)")) %>%
+  addControl("Boston Home Values, 1978", position = "bottomleft")
+
+
+```
+
+We can take the interactivity of the map one step further.  R has 
+developed tools that allow us to build web apps (through the "Shiny" 
+package).
+
+Using R's Shiny tools, we can create a drop down list of all of our housing data variables and allow the user 
+to select whichever map they are interested in.
+
+
+```{r}
+### Initial data cleaning
+### I create a list of variable descriptions for my legends.
+### Note: "<br/>" is HTML syntax for a line break since Leaflet plots and shiny use HTML language (as we are building a web app).
+legend_desc <-
+  list(
+    "Median Home <br/> Value ($1,000's)",
+    "Per Capita Crime Rate",
+    "Prop. of Land Zoned <br/> Lots of >25000 sq. ft.",
+    "Prop. of Non-Retail Business Acres",
+    "Charles River Dummy",
+    "Nitrous Oxide Concentration <br/> PP10Mil",
+    "Avg. Num. Rooms per Dwelling",
+    "Prop. of Building Constructed <br/> Prior to 1940",
+    "Avg Distance to 5 Employment Centers",
+    "Radial Highway <br/> Accessibility Index",
+    "Property-Tax Rate",
+    "Pupil-Teacher Ratio",
+    "Prop. Lower Status Population"
+  )
+names(legend_desc) <- 
+  names(housing_data[1:length(legend_desc)])
+
+
+```
+
+```{r}
+
+shinyApp(
+  ui = 
+  fluidPage(
+    ### tells Shiny interface that you are printing a Leaflet Map
+    leafletOutput("my_map"),
+    ### creates variable drop-down list in my web app
+    selectInput(### How I will reference the option in subsequent code:
+                "variable",
+                ### Dropdown text that will appear in the app:
+                "Variable:",
+                names(housing_data %>%
+                        dplyr::select(MEDV:LSTAT,-CHAS)),
+                ### I choose the initial selected option for the map:
+                selected = "MEDV"),
+    ### I create a drop-down list for heatmap coloring options
+    selectInput("colors", "Color Scheme",
+                ### list of common heatmap coloring schemes I found online
+                rownames(subset(brewer.pal.info, 
+                                category %in% c("seq", "div"))),
+                ### default option
+                selected = "YlOrRd"
+                ) 
+  ),
+  server = function(input, output) {
+    ### first create non-dynamic elements of the map
+    my_map = housing_data %>%
+      leaflet() %>%
+      addTiles() %>%
+      ### sets a default dimension of the map
+      fitBounds(~min(lon), ~min(lat), ~max(lon), ~max(lat))
+  
+  # The reactive function notes this input for the map will change as the user makes selections in the web app.
+  my_pal <- reactive({
+    colorNumeric(
+      palette = input$colors,
+      domain = housing_data[, input$variable])
+  })  
+  
+  
+  
+  # Incremental changes to the map (in this case, replacing the
+  # circles when a new color is chosen) should be performed in
+  # an observer. Again, I found all of this code online.
+  observe({
+    pal <- my_pal()
+    
+    leafletProxy("my_map", data = housing_data) %>%
+      ### remove any existing layers of data
+      clearMarkers() %>%
+      clearControls() %>%
+      
+      addCircleMarkers(
+        lng = ~ lon,
+        lat = ~ lat,
+        color = as.formula(paste0("~pal(", input$variable, ")")),
+        popup = as.formula(paste0("~as.character(", input$variable, ")")),
+        radius = 0.5
+      ) %>%
+      ### This is the background art for the map.
+      addProviderTiles(providers$CartoDB.Positron) %>%
+      addLegend(
+        position = "topright",
+        pal = pal,
+        ### I run "as.formula" since my input calls a character string of the selected variable.
+        values = as.formula(paste0("~", input$variable)),
+        bins = 7,
+        # HTML function allows me to add line break using <br/>
+        title = htmltools::HTML(as.character(legend_desc[input$variable]))
+      ) %>%
+      addControl(HTML("<b>Boston Housing Data by Neighborhood, 1978"), position = "bottomleft")
+  })
+    ### Tells Shiny to render the map I created above.
+    output$my_map <- renderLeaflet(my_map)
+  },
+  ### controls the dimensions the app will take in the Web Document
+  options = list(height = 750)
+)
+
+```
+
+
+
+While the interactive maps are great, especially in the exploratory stage, it may be preferable 
+to create a static map with ggplot formatting for a final research report.  We can do this using 
+the SF package that we loaded earlier.
+
+Our Boston housing data has a 'geometry' variable, which includes shape data for each neighborhood 
+of interest.  The shape data provides boundary coordinates for each neighborhood, which R can utilize 
+to draw a map of each tract of land.
+
+
+```{r, results = "hide"}
+### first, I pull generic state shape data from the TIGRIS package, which has a lot of useful 
+###   shape files for us.
+
+### We could try to look at the results drawn over a map of Massachussetts
+
+### I am currently using the sf package to draw maps, so this is the class I draw.
+mass_geo <- tigris::counties(class = "sf", cb = TRUE) %>%
+  ### filter data to massachussetts
+  filter(STATEFP == "25")
+```
+
+```{r}
+### Take a look at the geometry variables.  They are special types of objects that 
+###  list out geographical coordinates that R should draw lines between to create 
+###   shapes of states, counties, etc.
+
+### First heatmap plot overlaid over MA
+ggplot() +
+  ### our housing data.
+  geom_sf(data = housing_data,
+          aes(geometry = geometry,
+              fill = MEDV))  +
+  ### add MA background
+  geom_sf(data = mass_geo)
+
+```
+
+It's difficult to see what's going on, but we could see how this would be a visually 
+pleasing layer to add to the map if we had more Massachussetts data than just Boston.
+
+I will remove the state layer for now and just look at our Boston data.
+
+```{r}
+ggplot() +
+  ### our housing data.
+  geom_sf(data = housing_data,
+          aes(geometry = geometry,
+              fill = MEDV)) +
+  ### I want to go back to yellow-red coloring as well
+  scale_fill_gradient(low = "yellow", high = "red") +
+  ggtitle("Median Neighborhood Home Values\n Boston Metropolitan Area, 1978")
+
+      
+```
+
+
+There is still a lot of work to be done to make this plot look better.  But this is an introduction to 
+creating static maps that you might place in a final research report.
+
+
