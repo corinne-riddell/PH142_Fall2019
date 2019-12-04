@@ -1,0 +1,90 @@
+---
+title: "Alternative Estimates of Correlation"
+date: "11/23/2019"
+output: pdf_document
+---
+
+This supplement to your housing price lab includes two practice questions 
+regarding nonparametric estimation of the correlation coefficient.
+
+We are still using the Boston housing data set.  However, we will be loading a 
+different version of the data that includes granular geographic variables.
+
+First, make sure the following packages are loaded:
+
+```{r, warning = FALSE, message = FALSE}
+
+### the classics
+library(ggplot2)
+library(tidyr)
+library(broom)
+library(dplyr)
+```
+
+Now, load the Boston housing data with new variables:
+```{r}
+housing_data <- readRDS("../../Data/boston_housing_data_with_geo_vars.RDS")
+```
+
+**Question 1**
+
+I am interested in testing whether median home value in 1000s (`MEDV`) 
+is correlated with pupil teacher ratio (`PTRATIO`) by town. Take a look at the 
+data and see that both of these variables are continuous. We would like to test
+the null hypothesis that the correlation coefficient equal to 0.  
+
+Using methods covered in the textbook, we learned that if we were to reject the 
+hypothesis that the slope coefficient was equal to 0 for the relationship between 
+`MEDV` and `PTRATIO`, then this would imply that we would also reject the hypothesis
+that the correlation coefficient is equal to 0. The reason this is true is that
+the formula for the slope parameter is a function of the correlation coefficient:
+
+$$\hat{b} = r * \frac{sd_y}{sd_x}$$ where $r$ is the 
+correlation between $x$ and $y$). 
+
+**1(a) Name another method I can use to test whether there is a nonzero correlation between MEDV and PTRATIO.**
+
+Your answer here.
+
+**1(b) Why might we prefer this method to the regression-based test?**
+
+Your answer here.
+
+**1(c) Describe in words how you might carry out this alternative test.**
+
+Your answer here.
+
+**1(d) [Optional] Run this alternative test using the housing data.**
+
+Your code and answer here
+
+\newpage
+
+
+**Question 2**
+
+Now, I am interested in creating a 95% confidence interval 
+for the correlation between median home value in 1000s (`MEDV`) 
+and pupil teacher ratio (`PTRATIO`) by town.
+
+Think back to the formulas we covered in class (from the textbook) to create
+confidence intervals. None of those formulas applied to the correlation coefficient.
+However, we learned an alternative method to calculate confidence intervals.
+
+**2(a) What alternative method can I use to create a 95% confidence interval for the correlation between `MEDV` and `PTRATIO`?**
+
+Your answer here.
+
+**2(b) Why might I prefer using this method to the t-distribution based methods?**
+
+Your answer here.
+
+**2(c) Describe in words how you might carry out this alternative method.**
+
+Your answer here.
+
+**2(d) [Optional] Code this alternative method for our data in R.**
+
+Your code and answer here.
+
+
