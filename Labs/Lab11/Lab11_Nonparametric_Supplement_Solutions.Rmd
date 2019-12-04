@@ -1,0 +1,220 @@
+---
+title: "Alternative Estimates of Correlation"
+date: "11/23/2019"
+output: pdf_document
+---
+
+This supplement to your housing price lab includes two practice questions 
+regarding nonparametric estimation of the correlation coefficient.
+
+We are still using the Boston housing data set.  However, we will be loading a 
+different version of the data that includes granular geographic variables.
+
+First, make sure the following packages are loaded:
+
+```{r, warning = FALSE, message = FALSE}
+
+### the classics
+library(ggplot2)
+library(tidyr)
+library(broom)
+library(dplyr)
+```
+
+Now, we will load the Boston housing data with new variables:
+```{r}
+housing_data <- 
+  readRDS("../../Data/boston_housing_data_with_geo_vars.RDS")
+```
+
+
+**Question 1**
+
+I am interested in testing whether median home value in 1000s (`MEDV`) 
+is correlated with pupil teacher ratio (`PTRATIO`) by town. Take a look at the 
+data and see that both of these variables are continuous. We would like to test
+the null hypothesis that the correlation coefficient equal to 0.  
+
+Using methods covered in the textbook, we learned that if we were to reject the 
+hypothesis that the slope coefficient was equal to 0 for the relationship between 
+`MEDV` and `PTRATIO`, then this would imply that we would also reject the hypothesis
+that the correlation coefficient is equal to 0. The reason this is true is that
+the formula for the slope parameter is a function of the correlation coefficient:
+
+$$\hat{b} = r * \frac{sd_y}{sd_x}$$ where $r$ is the 
+correlation between $x$ and $y$). 
+
+**1(a) Name another method I can use to test whether there is a nonzero correlation between MEDV and PTRATIO.**
+
+SOLUTION: Permutation test.
+
+**1(b) Why might we prefer this method to either the regression-based test or a t-test?**
+
+SOLUTION: The permutation test does not require that our sample data be 
+generated from an approximately normal distribution.
+
+**1(c) Describe in words how you might carry out this nonparametric test.**
+
+SOLUTION: The procedure would go as follows:
+
+i. Calculate the sample correlation.
+ii. While keeping the order of PTRATIO fixed, randomly shuffle the values of MEDV.
+iii. Calculate and store the estimate of correlation between PTRATIO and MEDV based on the shuffled data.
+iv. Iterate steps (ii) and (iii) preferably at least 10,000 times.
+v. Plot a histogram of these 10,000 estimated correlations.
+vi. We have created an approximated distribution of possible sample correlations under the null hypothesis that PTRATIO and MEDV are unrelated.  Calculate the 97.5th (or 2.5th if sample correlation 
+is negative) quantile of our approximated distribution.
+vii. Reject the null hypothesis if the sample correlation is 
+greater (or less) than the quantile calcualted in step (vi).
+
+
+**1(d) [Optional] Run this nonparametric test for our data in R. Note that you do 
+not need to know how to write the code for the exam**
+
+SOLUTION:
+
+```{r}
+### set seed for replicability
+set.seed(20191123)
+
+### compute actual observed correlation
+sample_correlation <-
+  cor(housing_data$PTRATIO, housing_data$MEDV)
+### print
+sample_correlation
+
+### fix order of ptratio vector
+fixed_ptratio <- housing_data$PTRATIO
+
+### storage for randomized permutations
+synthetic_distribution <-
+  ### just creates 10,000 filler 0's for now
+  rep(0, 10000)
+
+for(i in 1:10000) {
+  ### randomly arrange medv
+  rearranged_medv <- sample(housing_data$MEDV)
+  
+  ### NOTE: normally we would just compute every possible
+  ### randomization but that is computationally expensive
+  ### for a large dataset.
+  
+  ### compute randomized correlation and store
+  synthetic_distribution[i] <- 
+    cor(fixed_ptratio, rearranged_medv)
+  
+}
+
+### visualize synthetic distribution
+### convert to data frame form in order to use ggplot
+synthetic_distribution_df <-
+  data.frame(synthetic_distribution)
+
+synthetic_distribution_df %>%
+  ggplot(aes(x = synthetic_distribution)) + geom_histogram()
+
+### calculate 2.5th quantile since we have negative sample correlation
+quantile(synthetic_distribution, .025)
+
+### Do we reject the null hypothesis?
+sample_correlation < quantile(synthetic_distribution, .025)
+
+```
+
+We reject the null hypothesis that there is no relationship 
+between neighborhood pupil-teacher ratio and median home value. 
+
+\newpage
+
+**Question 2**
+
+Now, I am interested in creating a 95% confidence interval 
+for the correlation between median home value in 1000s (`MEDV`) 
+and pupil teacher ratio (`PTRATIO`) by town.
+
+Think back to the formulas we covered in class (from the textbook) to create
+confidence intervals. None of those formulas applied to the correlation coefficient.
+However, we learned an alternative method to calculate confidence intervals.
+
+**2(a) What alternative method can I use to create a 95% confidence interval for the correlation between `MEDV` and `PTRATIO`?**
+
+SOLUTION: Bootstrap
+
+**2(b) Why might I prefer using this method to the t-distribution based methods?**
+
+SOLUTION: My data do not approximately follow the normal distribution.
+
+**2(c) Describe in words how you might carry out this alternative method.**
+
+SOLUTION: My procedure would be as follows:
+
+i. With replacement, sample 506 **pairs** of PTRATIO and MEDV 
+from the data.  Since these variables are paired, it is important that 
+we do not separately sample PTRATIO and then sample MEDV.
+
+ii. Compute the correlation between PTRATIO and MEDV for 
+this synthetic sample of our data.
+
+iii. Repeat steps (i) and (ii) enough times to create a good 
+synthetic distribution for the correlation (preferably 10,000 or more 
+times).
+
+iv. Plot a histogram of the bootstrap.
+
+v. Calculate the 2.5th and 97.5th quantiles of our synthetic 
+distribution.  These are the bounds of our bootstrap confidence 
+interval for the correlation between MEDV and PTRATIO.
+
+**2(d) [Optional] Code this nonparametric method for our data in R.**
+
+SOLUTION:
+
+```{r}
+### set seed for replicability
+set.seed(20191123)
+
+### create storage vector for bootstrap correlations
+bootstrap_corrs <-
+  ### just creates 10,000 filler 0's for now
+  rep(0, 10000)
+
+for(i in 1:10000) {
+  ### take paired sample of data
+  bootstrap_sample <-
+    ### dplyr sample_n function samples rows at a time.
+    sample_n(housing_data %>%
+               select(MEDV, PTRATIO),
+           506,
+           replace = TRUE)
+  
+  ### fill in the boostrap correlation vector
+  bootstrap_corrs[i] <-
+    cor(bootstrap_sample$MEDV,
+        bootstrap_sample$PTRATIO)
+  
+}
+
+### plot our synthetic distribution
+### convert to data frame form in order to use ggplot
+bootstrap_corrs_df <-
+  data.frame(bootstrap_corrs)
+
+bootstrap_corrs_df %>%
+  ggplot(aes(x = bootstrap_corrs)) +
+  geom_histogram()
+
+### compute the CI bounds using the quantile function.
+ci_lower <- 
+  quantile(bootstrap_corrs, 0.025)
+
+ci_upper <- 
+  quantile(bootstrap_corrs, 0.975)
+
+### report the CI
+c(ci_lower, ci_upper)
+
+
+```
+
+
+
